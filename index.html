@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Solidna Witryna — marka i strona internetowa dla lokalnych firm</title>
+  <meta name="description" content="Projektuję marki i strony, dzięki którym klienci ufają Ci od pierwszej wizyty i chętnie się odzywają. Bezpłatna konsultacja (30 min).">
+  <link rel="canonical" href="https://solidnawitryna.pl/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Solidna Witryna">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:url" content="https://solidnawitryna.pl/">
+  <meta property="og:title" content="Solidna Witryna — marka i strona internetowa dla lokalnych firm">
+  <meta property="og:description" content="Projektuję marki i strony, dzięki którym klienci ufają Ci od pierwszej wizyty i chętnie się odzywają.">
+  <meta property="og:image" content="https://solidnawitryna.pl/assets/img/serhii.jpg">
+  <meta property="og:image:width" content="360">
+  <meta property="og:image:height" content="360">
+  <meta property="og:image:alt" content="Portret Serhii Orlenko">
+  <meta name="twitter:card" content="summary">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20120%20120'%3E%3Cstyle%3E.f%7Bfill:%230B1530%7D.d%7Bfill:%23fff%7D.i%7Bfill:%23fff%7D.w%7Bstroke:%232347E0%7D%40media%20(prefers-color-scheme:dark)%7B.f%7Bfill:%23fff%7D.d%7Bfill:%230B1530%7D.i%7Bfill:%23EAF0FF%7D.w%7Bstroke:%232F5BFF%7D%7D%3C/style%3E%3Crect%20class='f'%20x='4'%20y='4'%20width='112'%20height='112'%20rx='28'/%3E%3Ccircle%20class='d'%20cx='27'%20cy='22'%20r='4.5'/%3E%3Ccircle%20class='d'%20cx='40'%20cy='22'%20r='4.5'/%3E%3Ccircle%20class='d'%20cx='53'%20cy='22'%20r='4.5'/%3E%3Crect%20class='i'%20x='17'%20y='34'%20width='86'%20height='70'%20rx='13'/%3E%3Cpolyline%20class='w'%20points='35,52%2047,86%2060,63%2073,86%2085,52'%20fill='none'%20stroke-width='11'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/main.js" defer></script>
+  <noscript>
+    <style>
+      /* Without JS there is no intro: show the finished page. */
+      .splash, .hero-photo, .photo-rings, .ctrls { display: none; }
+      .scene, .by img, .by span { opacity: 1; }
+    </style>
+  </noscript>
+</head>
+<body>
+
+  <svg class="sprite" width="0" height="0" aria-hidden="true">
+    <symbol id="logomark" viewBox="0 0 120 120">
+      <rect style="fill:var(--lf)" x="4" y="4" width="112" height="112" rx="28"/>
+      <circle style="fill:var(--ld)" cx="27" cy="22" r="4.5"/><circle style="fill:var(--ld)" cx="40" cy="22" r="4.5"/><circle style="fill:var(--ld)" cx="53" cy="22" r="4.5"/>
+      <rect style="fill:var(--li)" x="17" y="34" width="86" height="70" rx="13"/>
+      <polyline style="stroke:var(--lw)" points="35,52 47,86 60,63 73,86 85,52" fill="none" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </svg>
+
+  <div class="splash" id="splash" aria-hidden="true">
+    <div class="sp-in">
+      <div class="sp-row">
+        <img class="sp-photo" id="spPhoto" src="assets/img/serhii.jpg" width="360" height="360" alt="">
+        <svg class="mark" id="spMark" viewBox="0 0 120 120"><use href="#logomark"/></svg>
+      </div>
+      <div class="sp-word wm" id="spWord"></div>
+      <div class="sp-by" id="spBy">by <b>Serhii Orlenko</b></div>
+    </div>
+  </div>
+
+  <div class="wrap" id="page">
+    <a class="skip" href="#main">Przejdź do treści</a>
+
+    <header>
+      <div class="hl-left">
+        <a class="brand" href="#top" aria-label="Solidna Witryna by Serhii Orlenko">
+          <svg class="mark" viewBox="0 0 120 120" aria-hidden="true"><use href="#logomark"/></svg>
+          <span class="wm"><span class="a">solidna</span><span class="b">witryna</span><span class="c">.pl</span></span>
+        </a>
+        <div class="by" id="by">
+          <img id="hdrPhoto" src="assets/img/serhii.jpg" width="360" height="360" alt="">
+          <span>by <b>Serhii Orlenko</b></span>
+        </div>
+      </div>
+      <nav aria-label="Główne menu">
+        <a href="#work">Realizacje</a><a href="#work">Usługi</a><a href="#work">O mnie</a>
+        <span class="lang" role="group" aria-label="Język"><span class="on" aria-current="true">PL</span><span lang="en">EN</span></span>
+        <button class="btn-sm" type="button">Umów rozmowę</button>
+      </nav>
+    </header>
+
+    <main id="main">
+      <div class="hero" id="top">
+        <div>
+          <p class="eyebrow reveal">Marka i strona internetowa dla lokalnych firm</p>
+          <h1 class="reveal">
+            <span class="sr-only">Solidna strona dla lokalnych firm</span>
+            <span aria-hidden="true">Solidna strona<span class="rot-line">dla <span class="rot" id="rot">lokalnych firm</span></span></span>
+          </h1>
+          <p class="sub reveal">Projektuję marki i strony, dzięki którym klienci ufają Ci od pierwszej wizyty i chętnie się odzywają.</p>
+          <div class="cta reveal">
+            <button class="btn" type="button">Umów bezpłatną konsultację (30 min) <span aria-hidden="true">→</span></button>
+            <a class="link" href="#work">Zobacz realizacje ↓</a>
+          </div>
+          <ul class="chips reveal"><li>Identyfikacja marki</li><li>Strona internetowa</li><li>Start w 2–3 tygodnie</li></ul>
+        </div>
+
+        <div class="stage-wrap">
+          <div class="photo-rings" id="rings"></div>
+          <img class="hero-photo" id="heroPhoto" src="assets/img/serhii.jpg" width="360" height="360" alt="Portret Serhii Orlenko">
+          <div class="scene" id="scene">
+      <svg class="stage" id="stage" viewBox="0 0 600 520" role="img" aria-label="Ilustracja: puste okno przeglądarki, w którym powstaje logo MARKA, potem gotowa strona i tarcza z kłódką jako znak zaufania.">
+        <defs>
+          <clipPath id="winclip"><rect x="20" y="70" width="560" height="420" rx="20"/></clipPath>
+          <clipPath id="heroclip"><rect x="36" y="170" width="528" height="190" rx="14"/></clipPath>
+        </defs>
+        <ellipse cx="300" cy="290" rx="290" ry="238" fill="var(--blob)"/>
+        <ellipse cx="300" cy="290" rx="312" ry="258" fill="none" stroke="var(--ring)" stroke-width="2"/>
+        <g id="win">
+          <rect x="20" y="70" width="560" height="420" rx="20" fill="var(--il-white)"/>
+          <g clip-path="url(#winclip)">
+            <rect x="20" y="70" width="560" height="44" fill="var(--il-bar)"/>
+            <rect x="20" y="112" width="560" height="2" fill="var(--il-line)"/>
+            <circle cx="42" cy="92" r="5" fill="var(--il-acc)"/><circle cx="62" cy="92" r="5" fill="var(--il-line)"/><circle cx="82" cy="92" r="5" fill="var(--il-line)"/>
+            <rect x="120" y="80" width="300" height="24" rx="12" fill="#fff" stroke="var(--il-line)" stroke-width="1.5"/>
+            <g id="nav">
+              <rect class="navp pop" x="376" y="131" width="26" height="7" rx="3.5" fill="var(--il-line)"/>
+              <rect class="navp pop" x="412" y="131" width="26" height="7" rx="3.5" fill="var(--il-line)"/>
+              <rect class="navp pop" x="448" y="131" width="26" height="7" rx="3.5" fill="var(--il-line)"/>
+              <rect class="navp pop" x="486" y="124" width="78" height="22" rx="11" fill="var(--il-acc)"/>
+              <rect class="navp pop" x="510" y="133" width="30" height="4" rx="2" fill="#fff"/>
+            </g>
+            <rect id="heroBg" class="top" x="36" y="170" width="528" height="190" rx="14" fill="var(--il-acc)"/>
+            <g id="sc" clip-path="url(#heroclip)">
+              <circle cx="470" cy="200" r="78" fill="#4A74F0" opacity=".55"/>
+              <path d="M36 340 Q180 300 330 336 T564 328 V360 H36 Z" fill="var(--il-hill)"/>
+              <g id="house">
+                <rect x="404" y="270" width="100" height="82" fill="#fff"/>
+                <rect x="396" y="256" width="116" height="16" rx="4" fill="var(--il-ink)"/>
+                <rect x="414" y="288" width="22" height="22" rx="3" fill="var(--il-sky)" stroke="var(--il-ink)" stroke-width="2"/>
+                <rect x="472" y="288" width="22" height="22" rx="3" fill="var(--il-sky)" stroke="var(--il-ink)" stroke-width="2"/>
+                <rect x="445" y="312" width="22" height="40" rx="3" fill="var(--il-amber)" stroke="var(--il-ink)" stroke-width="2"/>
+              </g>
+              <g id="tree" class="pop"><rect x="530" y="318" width="6" height="34" fill="var(--il-ink)"/><circle cx="533" cy="304" r="22" fill="var(--il-green)"/></g>
+            </g>
+            <g id="heroTxt">
+              <rect class="hl" x="60" y="204" width="230" height="16" rx="8" fill="#fff"/>
+              <rect class="hl" x="60" y="232" width="170" height="10" rx="5" fill="#fff" opacity=".75"/>
+              <rect class="hl" x="60" y="250" width="130" height="10" rx="5" fill="#fff" opacity=".75"/>
+              <rect id="heroBtn" class="pop" x="60" y="282" width="120" height="34" rx="17" fill="var(--il-amber)"/>
+            </g>
+            <g id="cards">
+              <g class="card pop">
+                <rect x="36" y="378" width="164" height="96" rx="12" fill="var(--il-sky)"/>
+                <polygon transform="translate(118 412)" points="0,-17 4.1,-5.7 16.2,-5.25 6.66,2.16 10,13.75 0,7 -10,13.75 -6.66,2.16 -16.2,-5.25 -4.1,-5.7" fill="var(--il-amber)"/>
+                <rect x="73" y="440" width="90" height="8" rx="4" fill="var(--il-line)"/><rect x="88" y="454" width="60" height="8" rx="4" fill="var(--il-line)"/>
+              </g>
+              <g class="card pop">
+                <rect x="218" y="378" width="164" height="96" rx="12" fill="var(--il-sky)"/>
+                <g transform="translate(300 412)"><circle cx="8" cy="-7" r="5" fill="var(--il-acc-l)"/><path d="M2 14q0-9 8-9t8 9z" fill="var(--il-acc-l)"/><circle cx="-7" cy="-8" r="6" fill="var(--il-acc)"/><path d="M-18 14q0-12 11-12t11 12z" fill="var(--il-acc)"/></g>
+                <rect x="255" y="440" width="90" height="8" rx="4" fill="var(--il-line)"/><rect x="270" y="454" width="60" height="8" rx="4" fill="var(--il-line)"/>
+              </g>
+              <g class="card pop">
+                <rect x="400" y="378" width="164" height="96" rx="12" fill="var(--il-sky)"/>
+                <g transform="translate(482 412)"><circle r="16" fill="var(--il-acc)"/><path d="M-7 0L-2 6L8-6" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g>
+                <rect x="437" y="440" width="90" height="8" rx="4" fill="var(--il-line)"/><rect x="452" y="454" width="60" height="8" rx="4" fill="var(--il-line)"/>
+              </g>
+            </g>
+            <g id="guides" stroke="#9AA6C4" stroke-width="1" stroke-dasharray="4 4" transform="translate(300 292)">
+              <line x1="-120" y1="-23" x2="120" y2="-23"/><line x1="-120" y1="22" x2="120" y2="22"/>
+              <line x1="-100" y1="-40" x2="-100" y2="40"/><line x1="100" y1="-40" x2="100" y2="40"/>
+            </g>
+            <g id="sw" opacity="0">
+              <circle class="pop" cx="262" cy="410" r="13" fill="var(--il-acc)"/>
+              <circle class="pop" cx="300" cy="410" r="13" fill="var(--il-amber)"/>
+              <circle class="pop" cx="338" cy="410" r="13" fill="var(--il-acc-l)"/>
+            </g>
+            <g id="logo">
+              <path id="arcA" pathLength="1" d="M-72 -18Q0 -64 72 -18" fill="none" stroke="var(--il-amber)" stroke-width="9" stroke-linecap="round"/>
+              <path id="arcB" pathLength="1" d="M-72 36Q0 80 72 36" fill="none" stroke="var(--il-acc)" stroke-width="9" stroke-linecap="round"/>
+              <text id="wm" x="0" y="22" text-anchor="middle">MARKA</text>
+            </g>
+            <g id="pencil">
+              <rect x="0" y="-5" width="46" height="10" fill="var(--il-amber)" stroke="var(--il-ink)" stroke-width="2"/>
+              <polygon points="0,-5 -13,0 0,5" fill="#F2CDB0" stroke="var(--il-ink)" stroke-width="2" stroke-linejoin="round"/>
+              <rect x="46" y="-5" width="8" height="10" rx="2" fill="var(--il-acc-l)" stroke="var(--il-ink)" stroke-width="2"/>
+            </g>
+          </g>
+          <rect x="20" y="70" width="560" height="420" rx="20" fill="none" stroke="var(--il-ink)" stroke-width="2.5"/>
+        </g>
+        <g id="shield">
+          <g id="rays" class="pop" stroke="var(--il-amber)" stroke-width="5" stroke-linecap="round">
+            <line x1="-52" y1="-14" x2="-72" y2="-20"/><line x1="-44" y1="-40" x2="-60" y2="-54"/><line x1="-22" y1="-56" x2="-26" y2="-76"/>
+          </g>
+          <g id="shieldBody" class="pop">
+            <path d="M0-46L38-32V4C38 28 20 40 0 50C-20 40-38 28-38 4V-32Z" fill="var(--il-green)" stroke="var(--il-ink)" stroke-width="3" stroke-linejoin="round"/>
+            <rect x="-13" y="-4" width="26" height="22" rx="4" fill="#fff"/>
+            <path d="M-8-4V-12a8 8 0 0 1 16 0V-4" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="0" cy="6" r="3" fill="var(--il-green)"/>
+          </g>
+        </g>
+      </svg>
+          </div>
+          <div class="ctrls">
+            <button id="ctrl" type="button">Zatrzymaj animację</button>
+            <button id="replay" type="button">Odtwórz intro</button>
+          </div>
+        </div>
+      </div>
+
+      <section class="work" id="work" aria-labelledby="work-title">
+        <h2 class="work-title" id="work-title">Wybrane realizacje</h2>
+        <a href="https://www.grifano.com/" target="_blank" rel="noopener">Fresno Samurai Arts</a>
+        <a href="https://www.grifano.com/" target="_blank" rel="noopener">C-Octopus</a>
+        <a href="https://www.grifano.com/" target="_blank" rel="noopener">SimplePrint</a>
+      </section>
+    </main>
+  </div>
+
+</body>
+</html>
