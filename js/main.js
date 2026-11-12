@@ -16,7 +16,7 @@
   var ROT_AFTER = 350;   /* rotating word starts this long after the splash ends */
   var FLIP_AFTER = 800;  /* photo flies into the header this long after the splash ends */
   var FLIP_MS = 1200;    /* length of that flight (was 500) */
-  var FLIP_EASE = 'cubic-bezier(.45,0,.2,1)'; /* soft start and soft landing (was .65,0,.25,1) */
+  var FLIP_EASE = 'cubic-bezier(.42,0,.58,1)'; /* ease in and out (same as Figma "Ease in and out" / CSS ease-in-out): slow start, fast middle, slow landing */
 
   /* ---------- splash shown once per session (storage can be blocked, so always try/catch) ---------- */
   var SPLASH_KEY = 'sw-splash-seen'; /* same key as the inline script in <head> */
@@ -105,11 +105,11 @@
     var p = heroPhoto.getBoundingClientRect(), a = hdrPhoto.getBoundingClientRect();
     var s = a.width / p.width, dx = a.left - p.left, dy = a.top - p.top;
     /* the rings fade while the photo leaves, instead of vanishing at the start */
-    I(rings, [{ opacity: 1 }, { opacity: 0 }], { duration: FLIP_MS * .7, easing: 'ease-in-out' });
+    I(rings, [{ opacity: 1 }, { opacity: 0 }], { duration: FLIP_MS * .7, easing: FLIP_EASE });
     var f = I(heroPhoto, [{ transform: 'none' }, { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + s + ')' }], { duration: FLIP_MS, easing: FLIP_EASE });
     /* the scene and the "by" text start while the photo is still travelling, so the move flows into them */
-    later(function () { I(scene, [{ opacity: 0 }, { opacity: 1 }], { duration: 800 }); sceneOn = true; playScene(); }, FLIP_MS * .45);
-    I(byText, [{ opacity: 0, transform: 'translateX(-8px)' }, { opacity: 1, transform: 'none' }], { duration: 650, delay: FLIP_MS * .7 });
+    later(function () { I(scene, [{ opacity: 0 }, { opacity: 1 }], { duration: 800, easing: FLIP_EASE }); sceneOn = true; playScene(); }, FLIP_MS * .45);
+    I(byText, [{ opacity: 0, transform: 'translateX(-8px)' }, { opacity: 1, transform: 'none' }], { duration: 650, delay: FLIP_MS * .7, easing: FLIP_EASE });
     f.onfinish = function () { heroPhoto.style.visibility = 'hidden'; hdrPhoto.style.opacity = 1; };
   }
   function playSplash() {
