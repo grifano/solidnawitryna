@@ -1,7 +1,8 @@
 /* Solidna Witryna: first screen (hero)
    Intro: a short splash (logo → wordmark → logo left / photo right) lifts away in 1.8 s; the hero follows.
    The h1, the photo and the rings are visible from the first paint (they are LCP candidates), so the splash
-   never delays content. The photo then flies into the header and the brand-to-website scene takes its place.
+   never delays content. The photo then rolls out and fades, the brand-to-website scene fades in on the same spot,
+   and the header by-line slides out from under the logo (Hero v2).
    Full splash: once per session. Respects prefers-reduced-motion: no intro, no animation, final state at once. */
 (function () {
   var $ = function (s) { return document.querySelector(s); };
@@ -14,9 +15,7 @@
   var SPLASH_MS = 1800;  /* full splash length (was 900). The steps in playSplash() are written for 900 ms and scaled by K. */
   var K = SPLASH_MS / 900;
   var ROT_AFTER = 350;   /* rotating word starts this long after the splash ends */
-  var FLIP_AFTER = 800;  /* photo flies into the header this long after the splash ends */
-  var FLIP_MS = 1200;    /* length of that flight (was 500) */
-  var FLIP_EASE = 'cubic-bezier(.42,0,.58,1)'; /* ease in and out (same as Figma "Ease in and out" / CSS ease-in-out): slow start, fast middle, slow landing */
+  var TO_SCENE_AFTER = 600; /* the photo rolls out and the scene fades in this long after the splash ends (spec: 200 ms earlier than the old 800) */
 
   /* ---------- splash shown once per session (storage can be blocked, so always try/catch) ---------- */
   var SPLASH_KEY = 'sw-splash-seen'; /* same key as the inline script in <head> */
@@ -85,10 +84,10 @@
     sTimer = setTimeout(playScene, L + 400);
   }
 
-  /* ---------- intro: splash → hero → photo flies into header ---------- */
+  /* ---------- intro: splash → hero → photo rolls out, scene fades in, by-line slides from under the logo ---------- */
   var iAnims = [], iTimers = [];
   var splash = $('#splash'), heroPhoto = $('#heroPhoto'), rings = $('#rings'),
-      hdrPhoto = $('#hdrPhoto'), byText = $('#by span'), scene = $('#scene');
+      by = $('#by'), byText = $('#by span'), scene = $('#scene');
   function I(el, kf, o) { var a = el.animate(kf, Object.assign({ fill: 'both', easing: ease }, o)); iAnims.push(a); return a; }
   function later(fn, ms) { iTimers.push(setTimeout(fn, ms)); }
   function resetAll() {
@@ -99,18 +98,19 @@
   function finalState() {
     splash.hidden = true;
     heroPhoto.style.visibility = 'hidden'; rings.style.visibility = 'hidden';
-    hdrPhoto.style.opacity = 1; byText.style.opacity = 1; scene.style.opacity = 1;
+    by.style.opacity = 1; scene.style.opacity = 1;
   }
-  function flipToHeader() {
-    var p = heroPhoto.getBoundingClientRect(), a = hdrPhoto.getBoundingClientRect();
-    var s = a.width / p.width, dx = a.left - p.left, dy = a.top - p.top;
-    /* the rings fade while the photo leaves, instead of vanishing at the start */
-    I(rings, [{ opacity: 1 }, { opacity: 0 }], { duration: FLIP_MS * .7, easing: FLIP_EASE });
-    var f = I(heroPhoto, [{ transform: 'none' }, { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + s + ')' }], { duration: FLIP_MS, easing: FLIP_EASE });
-    /* the scene and the "by" text start while the photo is still travelling, so the move flows into them */
-    later(function () { I(scene, [{ opacity: 0 }, { opacity: 1 }], { duration: 800, easing: FLIP_EASE }); sceneOn = true; playScene(); }, FLIP_MS * .45);
-    I(byText, [{ opacity: 0, transform: 'translateX(-8px)' }, { opacity: 1, transform: 'none' }], { duration: 650, delay: FLIP_MS * .7, easing: FLIP_EASE });
-    f.onfinish = function () { heroPhoto.style.visibility = 'hidden'; hdrPhoto.style.opacity = 1; };
+  /* Hero v2: all at the same time and smoothly with opacity. The photo (and its rings) roll out to the right and fade,
+     the scene fades in on the same spot, and the header by-line slides out from UNDER the logo (.brand covers it). */
+  function toScene() {
+    var soft = 'cubic-bezier(.45,0,.25,1)';
+    I(rings, [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateX(60px) scale(.96)' }], { duration: 900, easing: soft });
+    I(heroPhoto, [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateX(90px) rotate(28deg) scale(.96)' }], { duration: 900, easing: soft })
+      .onfinish = function () { heroPhoto.style.visibility = 'hidden'; rings.style.visibility = 'hidden'; };
+    sceneOn = true; playScene();
+    I(scene, [{ opacity: 0, transform: 'scale(.97)' }, { opacity: 1, transform: 'none' }], { duration: 1000, delay: 200, easing: soft });
+    I(by, [{ opacity: 0, transform: 'translateX(-64px)' }, { opacity: 1, transform: 'none' }], { duration: 900, delay: 150, easing: 'cubic-bezier(.22,.8,.3,1)' });
+    I(byText, [{ opacity: 0 }, { opacity: 1 }], { duration: 600, delay: 400, easing: 'ease-out' });
   }
   function playSplash() {
     var mark = $('#spMark'), spP = $('#spPhoto');
@@ -133,10 +133,10 @@
     var withSplash = !!(opts && opts.forceSplash) || !splashSeen();
     var t0 = withSplash ? SPLASH_MS : 0;
     heroPhoto.style.visibility = 'visible'; rings.style.visibility = 'visible';
-    hdrPhoto.style.opacity = 0; byText.style.opacity = 0; scene.style.opacity = 0;
+    by.style.opacity = 0; scene.style.opacity = 0;
     if (withSplash) playSplash(); else splash.hidden = true;
     later(startRot, t0 + ROT_AFTER);
-    later(flipToHeader, t0 + FLIP_AFTER);
+    later(toScene, t0 + TO_SCENE_AFTER);
   }
 
   /* The button label already tells the state ("Zatrzymaj" / "Wznów"), so no aria-pressed here. */

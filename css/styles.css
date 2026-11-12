@@ -119,6 +119,9 @@ img { max-width: 100%; }
 
 body {
   margin: 0;
+  /* The hero photo rolls out to the right (rotated) and its box would add a horizontal scroll. Clip at the viewport. */
+  overflow-x: hidden;
+  overflow-x: clip;
   background: var(--bg);
   color: var(--fg);
   font-family: "DM Sans", system-ui, sans-serif;
@@ -150,12 +153,14 @@ header {
   padding-block: 18px; border-bottom: 1px solid var(--line);
 }
 .hl-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
-.brand { display: flex; align-items: center; gap: 14px; min-width: 0; text-decoration: none; }
+/* The logo sits above the by-line and has the page background, so the by-line slides out from UNDER it. */
+.brand { display: flex; align-items: center; gap: 14px; min-width: 0; text-decoration: none; position: relative; z-index: 2; background: var(--bg); padding-right: 4px; }
 .brand .mark { width: 40px; height: 40px; flex: none; }
 .brand .wm { font-size: 21px; }
-.by { display: flex; align-items: center; gap: 10px; padding-left: 14px; border-left: 1px solid var(--line); min-width: 0; }
-.by img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex: none; opacity: 0; }
-.by span { font-size: 13px; color: var(--muted); line-height: 1.25; opacity: 0; }
+/* The whole by-line (divider, photo, text) is animated as one block by js/main.js (toScene). */
+.by { display: flex; align-items: center; gap: 10px; padding-left: 14px; border-left: 1px solid var(--line); min-width: 0; position: relative; z-index: 1; opacity: 0; }
+.by img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex: none; }
+.by span { font-size: 13px; color: var(--muted); line-height: 1.25; }
 .by b { display: block; color: var(--fg); font-weight: 600; font-size: 14px; }
 nav { display: flex; align-items: center; gap: 28px; font-weight: 500; font-size: 15px; }
 nav a { text-decoration: none; }
@@ -218,7 +223,7 @@ svg.stage { display: block; width: 100%; height: auto; overflow: visible; }
   position: absolute; inset: 0; margin: auto; width: 64%; max-width: 100%;
   aspect-ratio: 1 / 1; height: auto; border-radius: 50%;
 }
-.hero-photo { object-fit: cover; transform-origin: 0 0; z-index: 2; }
+.hero-photo { object-fit: cover; transform-origin: 50% 50%; z-index: 2; }
 .photo-rings { box-shadow: 0 0 0 18px var(--blob), 0 0 0 20px var(--ring); z-index: 1; }
 .ctrls { position: absolute; left: 0; bottom: -10px; display: flex; gap: 18px; }
 .ctrls button {
