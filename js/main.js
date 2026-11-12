@@ -1,5 +1,5 @@
 /* Solidna Witryna: first screen (hero)
-   Intro: a short splash (logo → wordmark → logo left / photo right) lifts away in about 1 s; the hero follows.
+   Intro: a short splash (logo → wordmark → logo left / photo right) lifts away in 1.8 s; the hero follows.
    The h1, the photo and the rings are visible from the first paint (they are LCP candidates), so the splash
    never delays content. The photo then flies into the header and the brand-to-website scene takes its place.
    Full splash: once per session. Respects prefers-reduced-motion: no intro, no animation, final state at once. */
@@ -11,7 +11,8 @@
   var paused = false;
 
   /* ---------- timing (ms) ---------- */
-  var SPLASH_MS = 900;   /* full splash: gone in under 1 s */
+  var SPLASH_MS = 1800;  /* full splash length (was 900). The steps in playSplash() are written for 900 ms and scaled by K. */
+  var K = SPLASH_MS / 900;
   var ROT_AFTER = 350;   /* rotating word starts this long after the splash ends */
   var FLIP_AFTER = 800;  /* photo flies into the header this long after the splash ends */
 
@@ -115,15 +116,15 @@
     markSplashSeen();
     document.documentElement.classList.remove('no-splash');
     splash.hidden = false; splash.classList.add('is-live');
-    I(mark, [{ opacity: 0, transform: 'scale(.4)' }, { opacity: 1, transform: 'none' }], { duration: 240, easing: spring });
-    $$('#spWord .ch').forEach(function (c, i) { I(c, [{ transform: 'translateY(110%)' }, { transform: 'none' }], { duration: 220, delay: 110 + i * 11 }); });
-    I(mark, [{ transform: 'translateX(0)' }, { transform: 'translateX(-82px)' }], { duration: 260, delay: 300, fill: 'forwards', easing: 'cubic-bezier(.65,0,.25,1)' });
-    I(spP, [{ opacity: 0, transform: 'translateX(0) scale(.7)' }, { opacity: 1, transform: 'translateX(82px) scale(1)' }], { duration: 260, delay: 300, easing: 'cubic-bezier(.65,0,.25,1)' });
-    I($('#spBy'), [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 200, delay: 380 });
-    I(splash, [{ transform: 'none' }, { transform: 'translateY(-100%)' }], { duration: 300, delay: 600, easing: 'cubic-bezier(.7,0,.2,1)' })
+    I(mark, [{ opacity: 0, transform: 'scale(.4)' }, { opacity: 1, transform: 'none' }], { duration: 240 * K, easing: spring });
+    $$('#spWord .ch').forEach(function (c, i) { I(c, [{ transform: 'translateY(110%)' }, { transform: 'none' }], { duration: 220 * K, delay: (110 + i * 11) * K }); });
+    I(mark, [{ transform: 'translateX(0)' }, { transform: 'translateX(-82px)' }], { duration: 260 * K, delay: 300 * K, fill: 'forwards', easing: 'cubic-bezier(.65,0,.25,1)' });
+    I(spP, [{ opacity: 0, transform: 'translateX(0) scale(.7)' }, { opacity: 1, transform: 'translateX(82px) scale(1)' }], { duration: 260 * K, delay: 300 * K, easing: 'cubic-bezier(.65,0,.25,1)' });
+    I($('#spBy'), [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 200 * K, delay: 380 * K });
+    I(splash, [{ transform: 'none' }, { transform: 'translateY(-100%)' }], { duration: 300 * K, delay: 600 * K, easing: 'cubic-bezier(.7,0,.2,1)' })
       .onfinish = function () { splash.hidden = true; };
     /* small text blocks fade in as the splash lifts; the h1 and the photo are never faded */
-    $$('.reveal').forEach(function (e, i) { I(e, [{ opacity: 0, transform: 'translateY(18px)' }, { opacity: 1, transform: 'none' }], { duration: 450, delay: SPLASH_MS - 300 + i * 70 }); });
+    $$('.reveal').forEach(function (e, i) { I(e, [{ opacity: 0, transform: 'translateY(18px)' }, { opacity: 1, transform: 'none' }], { duration: 450, delay: SPLASH_MS - 300 * K + i * 70 }); });
   }
   function intro(opts) {
     resetAll();
