@@ -17,11 +17,11 @@
   <meta property="og:url" content="https://solidnawitryna.pl/">
   <meta property="og:title" content="Solidna Witryna — marka i strona internetowa dla lokalnych firm">
   <meta property="og:description" content="Projektuję marki i strony, dzięki którym klienci ufają Ci od pierwszej wizyty i chętnie się odzywają.">
-  <meta property="og:image" content="https://solidnawitryna.pl/assets/img/serhii.jpg">
-  <meta property="og:image:width" content="360">
-  <meta property="og:image:height" content="360">
-  <meta property="og:image:alt" content="Portret Serhii Orlenko">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://solidnawitryna.pl/assets/img/og-card.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Solidna Witryna: marka i strona internetowa dla lokalnych firm, by Serhii Orlenko">
+  <meta name="twitter:card" content="summary_large_image">
 
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20120%20120'%3E%3Cstyle%3E.f%7Bfill:%230B1530%7D.d%7Bfill:%23fff%7D.i%7Bfill:%23fff%7D.w%7Bstroke:%232347E0%7D%40media%20(prefers-color-scheme:dark)%7B.f%7Bfill:%23fff%7D.d%7Bfill:%230B1530%7D.i%7Bfill:%23EAF0FF%7D.w%7Bstroke:%232F5BFF%7D%7D%3C/style%3E%3Crect%20class='f'%20x='4'%20y='4'%20width='112'%20height='112'%20rx='28'/%3E%3Ccircle%20class='d'%20cx='27'%20cy='22'%20r='4.5'/%3E%3Ccircle%20class='d'%20cx='40'%20cy='22'%20r='4.5'/%3E%3Ccircle%20class='d'%20cx='53'%20cy='22'%20r='4.5'/%3E%3Crect%20class='i'%20x='17'%20y='34'%20width='86'%20height='70'%20rx='13'/%3E%3Cpolyline%20class='w'%20points='35,52%2047,86%2060,63%2073,86%2085,52'%20fill='none'%20stroke-width='11'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3C/svg%3E">
 
@@ -52,7 +52,7 @@
   <div class="splash" id="splash" aria-hidden="true">
     <div class="sp-in">
       <div class="sp-row">
-        <img class="sp-photo" id="spPhoto" src="assets/img/serhii.jpg" width="360" height="360" alt="">
+        <img class="sp-photo" id="spPhoto" src="assets/img/serhii-400.webp" width="400" height="400" alt="">
         <svg class="mark" id="spMark" viewBox="0 0 120 120"><use href="#logomark"/></svg>
       </div>
       <div class="sp-word wm" id="spWord"></div>
@@ -70,7 +70,7 @@
           <span class="wm"><span class="a">solidna</span><span class="b">witryna</span><span class="c">.pl</span></span>
         </a>
         <div class="by" id="by">
-          <img id="hdrPhoto" src="assets/img/serhii.jpg" width="360" height="360" alt="">
+          <img id="hdrPhoto" src="assets/img/serhii-400.webp" width="400" height="400" alt="">
           <span>by <b>Serhii Orlenko</b></span>
         </div>
       </div>
@@ -99,7 +99,11 @@
 
         <div class="stage-wrap">
           <div class="photo-rings" id="rings"></div>
-          <img class="hero-photo" id="heroPhoto" src="assets/img/serhii.jpg" width="360" height="360" alt="Portret Serhii Orlenko">
+          <!-- LCP image: not lazy, high priority. Shown at 64% of its column: (viewport - 64px) * .328 in two columns, (viewport - 32px) * .64 in one; the 400 px file is the cap (the real maximum is 410 px). -->
+          <picture>
+            <source type="image/webp" srcset="assets/img/serhii-400.webp 400w, assets/img/serhii-800.webp 800w" sizes="(min-width: 901px) min(calc((100vw - 64px) * .328), 400px), min(calc((100vw - 32px) * .64), 400px)">
+            <img class="hero-photo" id="heroPhoto" src="assets/img/serhii-400.jpg" srcset="assets/img/serhii-400.jpg 400w, assets/img/serhii-800.jpg 800w" sizes="(min-width: 901px) min(calc((100vw - 64px) * .328), 400px), min(calc((100vw - 32px) * .64), 400px)" width="400" height="400" fetchpriority="high" alt="Portret Serhii Orlenko">
+          </picture>
           <div class="scene" id="scene">
       <svg class="stage" id="stage" viewBox="0 0 600 520" role="img" aria-label="Ilustracja: puste okno przeglądarki, w którym powstaje logo MARKA, potem gotowa strona i tarcza z kłódką jako znak zaufania.">
         <defs>

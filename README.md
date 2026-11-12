@@ -24,7 +24,7 @@ Then open <http://localhost:8000>. (`npx serve` works too.)
 index.html        page markup
 css/styles.css    styles; all colours are variables at the top of the file
 js/main.js        splash intro, rotating word, animated scene
-assets/img/       photo
+assets/img/       photo (400 and 800 px, WebP and JPG) and the social preview card
 ```
 
 ## Notes
