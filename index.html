@@ -3,6 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <script>
+    /* Full splash once per session: hide it before the first paint on repeat loads (storage may be blocked). */
+    try { if (sessionStorage.getItem('sw-splash-seen') === '1') document.documentElement.classList.add('no-splash'); } catch (e) { /* ignore */ }
+  </script>
   <title>Solidna Witryna — marka i strona internetowa dla lokalnych firm</title>
   <meta name="description" content="Projektuję marki i strony, dzięki którym klienci ufają Ci od pierwszej wizyty i chętnie się odzywają. Bezpłatna konsultacja (30 min).">
   <link rel="canonical" href="https://solidnawitryna.pl/">
@@ -81,7 +85,7 @@
       <div class="hero" id="top">
         <div>
           <p class="eyebrow reveal">Marka i strona internetowa dla lokalnych firm</p>
-          <h1 class="reveal">
+          <h1>
             <span class="sr-only">Solidna strona dla lokalnych firm</span>
             <span aria-hidden="true">Solidna strona<span class="rot-line">dla <span class="rot" id="rot">lokalnych firm</span></span></span>
           </h1>

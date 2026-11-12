@@ -1,13 +1,24 @@
 /* Solidna Witryna: first screen (hero)
-   Intro: splash (logo → wordmark → logo left / photo right) lifts away; hero follows.
-   Hero: photo backs the headline, then flies into the header; the brand-to-website scene takes its place.
-   Respects prefers-reduced-motion: no intro, no animation, final state shown at once. */
+   Intro: a short splash (logo → wordmark → logo left / photo right) lifts away in about 1 s; the hero follows.
+   The h1, the photo and the rings are visible from the first paint (they are LCP candidates), so the splash
+   never delays content. The photo then flies into the header and the brand-to-website scene takes its place.
+   Full splash: once per session. Respects prefers-reduced-motion: no intro, no animation, final state at once. */
 (function () {
   var $ = function (s) { return document.querySelector(s); };
   var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
   var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
   var ease = 'cubic-bezier(.22,.8,.3,1)', spring = 'cubic-bezier(.34,1.56,.64,1)';
   var paused = false;
+
+  /* ---------- timing (ms) ---------- */
+  var SPLASH_MS = 900;   /* full splash: gone in under 1 s */
+  var ROT_AFTER = 350;   /* rotating word starts this long after the splash ends */
+  var FLIP_AFTER = 800;  /* photo flies into the header this long after the splash ends */
+
+  /* ---------- splash shown once per session (storage can be blocked, so always try/catch) ---------- */
+  var SPLASH_KEY = 'sw-splash-seen'; /* same key as the inline script in <head> */
+  function splashSeen() { try { return sessionStorage.getItem(SPLASH_KEY) === '1'; } catch (e) { return false; } }
+  function markSplashSeen() { try { sessionStorage.setItem(SPLASH_KEY, '1'); } catch (e) { /* ignore */ } }
 
   /* wordmark letters for the splash */
   var spWord = $('#spWord');
@@ -22,7 +33,8 @@
 
   /* ---------- rotating business word (draft list, genitive after "dla") ---------- */
   var words = ['dentystów', 'fizjoterapeutów', 'kosmetologów', 'szkół językowych', 'szkół jazdy', 'weterynarzy', 'studiów tańca', 'fryzjerów', 'mechaników', 'psychologów', 'trenerów', 'przedszkoli'];
-  var wi = 0, rotTimer = null, rot = $('#rot');
+  var START_TEXT = 'lokalnych firm'; /* same as the HTML, so the h1 does not change when the script starts */
+  var wi = -1, rotTimer = null, rot = $('#rot');
   function rotateOnce() {
     var out = rot.animate([{ transform: 'none', opacity: 1 }, { transform: 'translateY(-.35em)', opacity: 0 }], { duration: 200, easing: 'ease-in', fill: 'forwards' });
     out.onfinish = function () {
@@ -72,19 +84,17 @@
 
   /* ---------- intro: splash → hero → photo flies into header ---------- */
   var iAnims = [], iTimers = [];
-  var page = $('#page'), splash = $('#splash'), heroPhoto = $('#heroPhoto'), rings = $('#rings'),
+  var splash = $('#splash'), heroPhoto = $('#heroPhoto'), rings = $('#rings'),
       hdrPhoto = $('#hdrPhoto'), byText = $('#by span'), scene = $('#scene');
   function I(el, kf, o) { var a = el.animate(kf, Object.assign({ fill: 'both', easing: ease }, o)); iAnims.push(a); return a; }
   function later(fn, ms) { iTimers.push(setTimeout(fn, ms)); }
-  /* While the splash covers the page, keep the page out of reach of keyboard and screen reader. */
-  function lockPage(on) { page.inert = on; }
   function resetAll() {
     iAnims.forEach(function (a) { a.cancel(); }); iAnims = []; iTimers.forEach(clearTimeout); iTimers = [];
     stopScene(); stopRot(); sceneOn = false;
-    wi = 0; rot.textContent = words[0];
+    wi = -1; rot.textContent = START_TEXT;
   }
   function finalState() {
-    splash.hidden = true; document.documentElement.style.overflow = ''; lockPage(false);
+    splash.hidden = true;
     heroPhoto.style.visibility = 'hidden'; rings.style.visibility = 'hidden';
     hdrPhoto.style.opacity = 1; byText.style.opacity = 1; scene.style.opacity = 1;
   }
@@ -100,25 +110,31 @@
       sceneOn = true; playScene();
     };
   }
-  function intro() {
+  function playSplash() {
+    var mark = $('#spMark'), spP = $('#spPhoto');
+    markSplashSeen();
+    document.documentElement.classList.remove('no-splash');
+    splash.hidden = false; splash.classList.add('is-live');
+    I(mark, [{ opacity: 0, transform: 'scale(.4)' }, { opacity: 1, transform: 'none' }], { duration: 240, easing: spring });
+    $$('#spWord .ch').forEach(function (c, i) { I(c, [{ transform: 'translateY(110%)' }, { transform: 'none' }], { duration: 220, delay: 110 + i * 11 }); });
+    I(mark, [{ transform: 'translateX(0)' }, { transform: 'translateX(-82px)' }], { duration: 260, delay: 300, fill: 'forwards', easing: 'cubic-bezier(.65,0,.25,1)' });
+    I(spP, [{ opacity: 0, transform: 'translateX(0) scale(.7)' }, { opacity: 1, transform: 'translateX(82px) scale(1)' }], { duration: 260, delay: 300, easing: 'cubic-bezier(.65,0,.25,1)' });
+    I($('#spBy'), [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 200, delay: 380 });
+    I(splash, [{ transform: 'none' }, { transform: 'translateY(-100%)' }], { duration: 300, delay: 600, easing: 'cubic-bezier(.7,0,.2,1)' })
+      .onfinish = function () { splash.hidden = true; };
+    /* small text blocks fade in as the splash lifts; the h1 and the photo are never faded */
+    $$('.reveal').forEach(function (e, i) { I(e, [{ opacity: 0, transform: 'translateY(18px)' }, { opacity: 1, transform: 'none' }], { duration: 450, delay: SPLASH_MS - 300 + i * 70 }); });
+  }
+  function intro(opts) {
     resetAll();
-    if (mq.matches) { finalState(); rot.textContent = 'lokalnych firm'; $('#ctrl').hidden = true; $('#replay').hidden = true; return; }
-    splash.hidden = false; document.documentElement.style.overflow = 'hidden'; lockPage(true);
+    if (mq.matches) { finalState(); $('#ctrl').hidden = true; $('#replay').hidden = true; return; }
+    var withSplash = !!(opts && opts.forceSplash) || !splashSeen();
+    var t0 = withSplash ? SPLASH_MS : 0;
     heroPhoto.style.visibility = 'visible'; rings.style.visibility = 'visible';
     hdrPhoto.style.opacity = 0; byText.style.opacity = 0; scene.style.opacity = 0;
-    var mark = $('#spMark'), spP = $('#spPhoto');
-    I(mark, [{ opacity: 0, transform: 'scale(.4)' }, { opacity: 1, transform: 'none' }], { duration: 650, easing: spring });
-    $$('#spWord .ch').forEach(function (c, i) { I(c, [{ transform: 'translateY(110%)' }, { transform: 'none' }], { duration: 520, delay: 650 + i * 35 }); });
-    I(mark, [{ transform: 'translateX(0)' }, { transform: 'translateX(-82px)' }], { duration: 750, delay: 1200, fill: 'forwards', easing: 'cubic-bezier(.65,0,.25,1)' });
-    I(spP, [{ opacity: 0, transform: 'translateX(0) scale(.7)' }, { opacity: 1, transform: 'translateX(82px) scale(1)' }], { duration: 750, delay: 1200, easing: 'cubic-bezier(.65,0,.25,1)' });
-    I($('#spBy'), [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 500, delay: 1800 });
-    I(splash, [{ transform: 'none' }, { transform: 'translateY(-100%)' }], { duration: 850, delay: 3000, easing: 'cubic-bezier(.7,0,.2,1)' })
-      .onfinish = function () { splash.hidden = true; document.documentElement.style.overflow = ''; lockPage(false); };
-    $$('.reveal').forEach(function (e, i) { I(e, [{ opacity: 0, transform: 'translateY(18px)' }, { opacity: 1, transform: 'none' }], { duration: 650, delay: 3300 + i * 110 }); });
-    I(heroPhoto, [{ opacity: 0, transform: 'scale(.85)' }, { opacity: 1, transform: 'none' }], { duration: 750, delay: 3400 });
-    I(rings, [{ opacity: 0, transform: 'scale(.85)' }, { opacity: 1, transform: 'none' }], { duration: 750, delay: 3400 });
-    later(startRot, 4200);
-    later(flipToHeader, 5300);
+    if (withSplash) playSplash(); else splash.hidden = true;
+    later(startRot, t0 + ROT_AFTER);
+    later(flipToHeader, t0 + FLIP_AFTER);
   }
 
   /* The button label already tells the state ("Zatrzymaj" / "Wznów"), so no aria-pressed here. */
@@ -127,6 +143,6 @@
     this.textContent = paused ? 'Wznów animację' : 'Zatrzymaj animację';
     if (paused) { stopScene(); stopRot(); } else { if (sceneOn) playScene(); if (splash.hidden) startRot(); }
   });
-  $('#replay').addEventListener('click', function () { window.scrollTo(0, 0); intro(); });
+  $('#replay').addEventListener('click', function () { window.scrollTo(0, 0); intro({ forceSplash: true }); });
   intro();
 })();

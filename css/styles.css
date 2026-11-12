@@ -243,7 +243,11 @@ svg.stage { display: block; width: 100%; height: auto; overflow: visible; }
   position: fixed; inset: 0; z-index: 50; background: var(--splash); display: grid; place-items: center;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
+  pointer-events: none; /* the splash never blocks clicks or scrolling */
 }
+.no-splash .splash { display: none; } /* repeat load in the same session (class set by the inline script in <head>) */
+.splash .sp-in { opacity: 0; }          /* no half-built frame before the script starts the animation */
+.splash.is-live .sp-in { opacity: 1; }
 .splash .mark { --lf: #FFFFFF; --ld: #0B1530; --li: #EAF0FF; --lw: #2F5BFF; }
 .sp-in { display: flex; flex-direction: column; align-items: center; gap: 26px; }
 .sp-row { position: relative; width: min(340px, 90vw); height: 136px; }
