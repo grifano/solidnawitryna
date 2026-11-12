@@ -1,0 +1,292 @@
+/* ==========================================================================
+   Solidna Witryna: first screen (hero)
+   Ported from the hero concept. Structure of this file:
+   1. Design tokens (all colours live here)
+   2. Base / reset
+   3. Header
+   4. Hero
+   5. Stage (photo + animated scene)
+   6. Splash (intro)
+   7. Work band
+   8. Accessibility helpers, reduced motion
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. DESIGN TOKENS: colours
+   Dark is the default. Light applies when the system prefers light, or when
+   <html data-theme="light"> is set. <html data-theme="dark"> forces dark.
+   ========================================================================== */
+:root {
+  --bg: #0B1530;
+  --fg: #F2F5FF;
+  --muted: #9FB0DC;
+  --line: #1C2D5E;
+  --accent: #6F94FF;
+  --accent-strong: #2F5BFF;
+  --btn-bg: #2F5BFF;
+  --btn-fg: #FFFFFF;
+  --blob: #14245A;
+  --ring: #2F5BFF;
+  --band: #2F5BFF;
+  --band-fg: #FFFFFF;
+  color-scheme: dark;
+
+  /* logo mark and wordmark */
+  --logo-frame: #FFFFFF;
+  --logo-dot: #0B1530;
+  --logo-inner: #EAF0FF;
+  --logo-w: #2F5BFF;
+  --wm-a: #F2F5FF;
+  --wm-b: #6F94FF;
+
+  /* splash background */
+  --splash: #0B1530;
+
+  /* illustration palette (animated scene) */
+  --il-ink: #0B1530;
+  --il-white: #FFFFFF;
+  --il-sky: #EAF0FF;
+  --il-bar: #EAF0FF;
+  --il-line: #C9D4F0;
+  --il-acc: #2347E0;
+  --il-acc-l: #7FA2F5;
+  --il-amber: #F5C25B;
+  --il-green: #3FA36B;
+  --il-hill: #5DA07B;
+  --il-grey: #7D879E;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #F3F6FC;
+    --fg: #0B1530;
+    --muted: #4A5780;
+    --line: #D5DDF0;
+    --accent: #2347E0;
+    --accent-strong: #2347E0;
+    --btn-bg: #2347E0;
+    --btn-fg: #FFFFFF;
+    --blob: #E1E9FB;
+    --ring: #B9C8F0;
+    --band: #2347E0;
+    --logo-frame: #0B1530;
+    --logo-dot: #FFFFFF;
+    --logo-inner: #FFFFFF;
+    --logo-w: #2347E0;
+    --wm-a: #0B1530;
+    --wm-b: #2347E0;
+    color-scheme: light;
+  }
+}
+
+:root[data-theme="light"] {
+  --bg: #F3F6FC;
+  --fg: #0B1530;
+  --muted: #4A5780;
+  --line: #D5DDF0;
+  --accent: #2347E0;
+  --accent-strong: #2347E0;
+  --btn-bg: #2347E0;
+  --btn-fg: #FFFFFF;
+  --blob: #E1E9FB;
+  --ring: #B9C8F0;
+  --band: #2347E0;
+  --logo-frame: #0B1530;
+  --logo-dot: #FFFFFF;
+  --logo-inner: #FFFFFF;
+  --logo-w: #2347E0;
+  --wm-a: #0B1530;
+  --wm-b: #2347E0;
+  color-scheme: light;
+}
+
+
+/* ==========================================================================
+   2. BASE / RESET
+   ========================================================================== */
+:root {
+  /* keep content clear of notches (viewport-fit=cover) */
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+img { max-width: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  padding-block: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: 1312px; margin: 0 auto; }
+
+/* logo mark (Concept E · Rama) */
+.mark { --lf: var(--logo-frame); --ld: var(--logo-dot); --li: var(--logo-inner); --lw: var(--logo-w); }
+.wm { font-weight: 700; letter-spacing: -.02em; white-space: nowrap; }
+.wm .a { color: var(--wm-a); }
+.wm .b { color: var(--wm-b); }
+.wm .c { color: var(--muted); font-weight: 600; }
+
+.sprite { position: absolute; }
+
+
+/* ==========================================================================
+   3. HEADER
+   ========================================================================== */
+header {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding-block: 18px; border-bottom: 1px solid var(--line);
+}
+.hl-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.brand { display: flex; align-items: center; gap: 14px; min-width: 0; text-decoration: none; }
+.brand .mark { width: 40px; height: 40px; flex: none; }
+.brand .wm { font-size: 21px; }
+.by { display: flex; align-items: center; gap: 10px; padding-left: 14px; border-left: 1px solid var(--line); min-width: 0; }
+.by img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex: none; opacity: 0; }
+.by span { font-size: 13px; color: var(--muted); line-height: 1.25; opacity: 0; }
+.by b { display: block; color: var(--fg); font-weight: 600; font-size: 14px; }
+nav { display: flex; align-items: center; gap: 28px; font-weight: 500; font-size: 15px; }
+nav a { text-decoration: none; }
+.lang { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; font-size: 13px; font-weight: 600; }
+.lang span { padding: 6px 12px; color: var(--muted); }
+.lang span.on { background: var(--fg); color: var(--bg); }
+.btn-sm {
+  border: 1.5px solid var(--fg); background: none; color: var(--fg);
+  font: 600 14px "DM Sans", system-ui, sans-serif; padding: 9px 18px; border-radius: 999px; cursor: pointer;
+}
+@media (max-width: 980px) { nav a, .lang { display: none; } }
+@media (max-width: 560px) {
+  .rot-line { white-space: normal; }
+  .by span { display: none; }
+  .brand .wm { font-size: 18px; }
+  .btn-sm { display: none; }
+  nav { display: none; } /* nothing left in it at this width: avoid an empty landmark */
+}
+
+
+/* ==========================================================================
+   4. HERO
+   ========================================================================== */
+.hero {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 32px; align-items: center; padding-block: 48px 56px;
+}
+@media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); padding-block: 32px 40px; } }
+.eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin: 0 0 22px; }
+h1 { font-weight: 600; font-size: clamp(38px, 5.4vw, 64px); line-height: 1.08; letter-spacing: -.03em; margin: 0 0 24px; }
+.rot-line { display: block; white-space: nowrap; }
+.rot { display: inline-block; color: var(--accent); position: relative; }
+.rot::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: .02em; height: .09em;
+  border-radius: 99px; background: var(--accent); opacity: .35;
+}
+.sub { font-size: 19px; line-height: 1.55; color: var(--muted); max-width: 32em; margin: 0 0 32px; }
+.cta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; margin-bottom: 28px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; background: var(--btn-bg); color: var(--btn-fg);
+  border: 0; border-radius: 999px; font: 600 16px "DM Sans", system-ui, sans-serif; padding: 18px 28px; cursor: pointer;
+}
+.link { font-weight: 500; text-underline-offset: 3px; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.chips li { border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; font-size: 14px; font-weight: 500; color: var(--muted); }
+
+
+/* ==========================================================================
+   5. STAGE: photo + animated scene
+   Scene base styles are the FINISHED state; JS animates towards it.
+   ========================================================================== */
+.stage-wrap { position: relative; max-width: 640px; width: 100%; justify-self: center; }
+.scene { opacity: 0; }
+svg.stage { display: block; width: 100%; height: auto; overflow: visible; }
+.hero-photo, .photo-rings {
+  position: absolute; inset: 0; margin: auto; width: 64%; max-width: 100%;
+  aspect-ratio: 1 / 1; height: auto; border-radius: 50%;
+}
+.hero-photo { object-fit: cover; transform-origin: 0 0; z-index: 2; }
+.photo-rings { box-shadow: 0 0 0 18px var(--blob), 0 0 0 20px var(--ring); z-index: 1; }
+.ctrls { position: absolute; left: 0; bottom: -10px; display: flex; gap: 18px; }
+.ctrls button {
+  background: none; border: 0; color: var(--muted); font: 500 13px "DM Sans", system-ui, sans-serif;
+  cursor: pointer; text-decoration: underline; text-underline-offset: 3px; padding: 6px 2px;
+}
+
+#win { filter: drop-shadow(0 20px 24px rgba(11, 21, 48, .35)); }
+.pop { transform-box: fill-box; transform-origin: 50% 50%; }
+.top { transform-box: fill-box; transform-origin: 50% 0; }
+#logo { transform-origin: 0 0; transform: translate(88px, 138px) scale(.46); }
+#wm {
+  font-family: "DM Sans", system-ui, sans-serif; font-weight: 700; font-size: 64px; letter-spacing: -1px;
+  fill: var(--il-ink); fill-opacity: 1; stroke: var(--il-grey); stroke-width: 1.6; stroke-opacity: 0;
+  stroke-dasharray: 600; stroke-linejoin: round;
+}
+#shield, #pencil { transform-origin: 0 0; }
+#shield { transform: translate(546px, 72px); }
+#guides, #pencil, #sw { opacity: 0; }
+
+
+/* ==========================================================================
+   6. SPLASH (intro)
+   ========================================================================== */
+.splash {
+  position: fixed; inset: 0; z-index: 50; background: var(--splash); display: grid; place-items: center;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.splash .mark { --lf: #FFFFFF; --ld: #0B1530; --li: #EAF0FF; --lw: #2F5BFF; }
+.sp-in { display: flex; flex-direction: column; align-items: center; gap: 26px; }
+.sp-row { position: relative; width: min(340px, 90vw); height: 136px; }
+.sp-row > * { position: absolute; top: 0; left: 50%; width: 128px; height: 128px; margin-left: -64px; }
+.sp-photo { border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 6px #14245A, 0 0 0 8px #2F5BFF; }
+.sp-word { font-size: clamp(34px, 7vw, 52px); line-height: 1.15; display: flex; overflow: hidden; padding-bottom: .08em; }
+.sp-word .ch { display: inline-block; }
+.sp-word .a { color: #F2F5FF; }
+.sp-word .b { color: #6F94FF; }
+.sp-word .c { color: #9FB0DC; }
+.sp-by { color: #9FB0DC; font-size: 16px; letter-spacing: .02em; }
+.sp-by b { color: #F2F5FF; font-weight: 600; }
+
+
+/* ==========================================================================
+   7. WORK BAND
+   ========================================================================== */
+.work {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px 36px;
+  margin-bottom: 40px; padding: 22px 28px; border-radius: 20px;
+  background: var(--band); color: var(--band-fg); font-size: 14px;
+}
+.work-title { margin: 0; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 600; }
+.work a { font-weight: 600; font-size: 18px; color: #fff; text-decoration: none; }
+.work a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.work a:focus-visible { outline-color: #fff; } /* default accent outline is invisible on the accent band */
+
+
+/* ==========================================================================
+   8. ACCESSIBILITY HELPERS, REDUCED MOTION
+   ========================================================================== */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+.skip {
+  position: fixed; top: 8px; left: 8px; z-index: 60; padding: 10px 16px; border-radius: 999px;
+  background: var(--fg); color: var(--bg); font-weight: 600; text-decoration: none;
+  transform: translateY(-200%);
+}
+.skip:focus-visible { transform: none; outline-offset: 2px; }
+
+/* The intro is skipped for reduced motion (see js/main.js); hide the splash before JS even runs. */
+@media (prefers-reduced-motion: reduce) {
+  .splash { display: none; }
+}
