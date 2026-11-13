@@ -14,5 +14,3 @@ node_modules/
 # Vercel local link
 .vercel/
 
-# Internal planning notes: not published
-docs/
