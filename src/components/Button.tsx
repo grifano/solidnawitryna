@@ -1,14 +1,34 @@
+import Link from "next/link";
 import { useId, type ComponentPropsWithoutRef, type MouseEvent } from "react";
 
 export type ButtonVariant = "primary" | "secondary";
 export type ButtonSize = "md" | "lg";
 
-export interface ButtonProps
-  extends Omit<ComponentPropsWithoutRef<"button">, "disabled"> {
+interface ButtonBaseProps {
   /** Вигляд кнопки: `primary` — на кольорі accent, `secondary` — без заливки, з межею. */
   variant?: ButtonVariant;
   /** Розмір: `md` — звичайний, `lg` — великий. */
   size?: ButtonSize;
+}
+
+/** Кнопка-посилання: з `href` рендериться `<a>`, а не `<button>`. */
+export interface ButtonLinkProps
+  extends ButtonBaseProps,
+    Omit<ComponentPropsWithoutRef<"a">, "href"> {
+  /**
+   * Адреса, куди веде кнопка: сторінка, якір (`#form`) або зовнішня (`https://…`).
+   * Зовнішня адреса відкривається в новій вкладці (`target="_blank"`, `rel="noopener noreferrer"`),
+   * якщо не передати свої `target` і `rel`.
+   */
+  href: string;
+  disabled?: never;
+  disabledReason?: never;
+}
+
+export interface ButtonActionProps
+  extends ButtonBaseProps,
+    Omit<ComponentPropsWithoutRef<"button">, "disabled"> {
+  href?: undefined;
   /**
    * Вимкнена кнопка. Робиться через `aria-disabled`, а не атрибут `disabled`,
    * тому лишається у фокусі: клавіша Tab її не пропускає, скрінрідер читає пояснення.
@@ -43,10 +63,41 @@ const sizes: Record<ButtonSize, string> = {
 const disabledStyles =
   "aria-disabled:cursor-not-allowed aria-disabled:border-line aria-disabled:bg-surface aria-disabled:text-text-muted";
 
+export type ButtonProps = ButtonLinkProps | ButtonActionProps;
+
 /**
  * Кнопка дизайн-системи: основна дія (`primary`) або другорядна (`secondary`).
+ * Без `href` це `<button>`, з `href` — посилання з тим самим виглядом.
  */
-export function Button({
+export function Button(props: ButtonProps) {
+  if (props.href !== undefined) return <ButtonLink {...props} />;
+  return <ButtonAction {...props} />;
+}
+
+function ButtonLink({
+  variant = "primary",
+  size = "md",
+  href,
+  target,
+  rel,
+  className,
+  ...rest
+}: ButtonLinkProps) {
+  const external = /^https?:\/\//.test(href);
+  return (
+    <Link
+      {...rest}
+      href={href}
+      target={target ?? (external ? "_blank" : undefined)}
+      rel={rel ?? (external ? "noopener noreferrer" : undefined)}
+      className={[base, variants[variant], sizes[size], className]
+        .filter(Boolean)
+        .join(" ")}
+    />
+  );
+}
+
+function ButtonAction({
   variant = "primary",
   size = "md",
   disabled = false,
@@ -57,7 +108,7 @@ export function Button({
   children,
   "aria-describedby": describedBy,
   ...rest
-}: ButtonProps) {
+}: ButtonActionProps) {
   const reasonId = useId();
   const showReason = disabled && Boolean(disabledReason);
   const describedByIds =

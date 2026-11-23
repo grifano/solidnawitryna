@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { Button } from "./Button";
+import { Button, type ButtonActionProps } from "./Button";
 
 const meta = {
   title: "Components/Button",
@@ -29,6 +29,7 @@ _Кнопка для дії на сторінці: надіслати форму
 | \`disabled\` | \`true\`, \`false\` | \`false\` |
 | \`disabledReason\` | текст пояснення під кнопкою | немає |
 | \`type\` | \`button\`, \`submit\`, \`reset\` | \`button\` |
+| \`href\` | адреса: сторінка, якір (\`#form\`) або \`https://…\`; з нею кнопка стає посиланням \`<a>\` | немає |
 | \`onClick\`, \`children\` та решта атрибутів \`<button>\` | як у звичайної кнопки | немає |
 
 ## Варіанти й стани
@@ -54,7 +55,8 @@ _Кнопка для дії на сторінці: надіслати форму
 - Основна кнопка: одна на екран або блок, для головної дії.
 - Другорядна кнопка: для додаткової дії поруч з основною або коли дія не головна.
 - Вимкнену кнопку лишай, коли дію тимчасово не можна виконати й користувачу треба пояснити чому. Завжди додавай \`disabledReason\`.
-- Не став дві основні кнопки поруч. Для переходу на інший URL краще посилання, а не кнопка.
+- Не став дві основні кнопки поруч.
+- Дія на сторінці (надіслати, відкрити) — кнопка без \`href\`. Перехід на сторінку, якір чи Calendly — кнопка з \`href\`: це справжнє посилання \`<a>\`, тому працюють відкриття в новій вкладці, копіювання адреси й Enter. Зовнішня адреса (\`https://…\`) відкривається в новій вкладці з \`rel="noopener noreferrer"\`. Вимкнути посилання не можна (\`disabled\` не діє з \`href\`).
 
 ## Як брати в код
 
@@ -63,6 +65,8 @@ import { Button } from "@/components/Button";
 
 <Button>Napisz do mnie</Button>
 <Button variant="secondary" size="lg">Zobacz prace</Button>
+<Button href="#form">Zamów mini-audyt</Button>
+<Button variant="secondary" href="https://calendly.com/…">Umów konsultację</Button>
 <Button disabled disabledReason="Uzupełnij formularz, aby wysłać wiadomość.">
   Wyślij
 </Button>
@@ -104,9 +108,19 @@ import { Button } from "@/components/Button";
     disabled: false,
     disabledReason: "Uzupełnij formularz, aby wysłać wiadomość.",
   },
-} satisfies Meta<typeof Button>;
+} satisfies Meta<ButtonActionProps>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
+
+/** Кнопка-посилання: з `href` це `<a>` з тим самим виглядом. Адресу задай в `href` у коді. */
+export const AsLink: Story = {
+  args: { children: "Umów bezpłatną konsultację", variant: "secondary" },
+  render: ({ variant, size, children }) => (
+    <Button variant={variant} size={size} href="#consultation">
+      {children}
+    </Button>
+  ),
+};

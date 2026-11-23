@@ -25,6 +25,22 @@
   --color-text-muted: #9fb0dc; /* другорядний текст; межі полів і кнопок без заливки */
   --color-danger: #ff8a80; /* помилка: текст і межа поля (червоний, відмінний від accent) */
 
+  /*
+   * Кольори анімованої сцени першого екрана (ілюстрація «вікно браузера»).
+   * Однакові в Dark і Light: вікно в сцені завжди світле, тому ці кольори не перемикаються.
+   * Фон сцени й кільце беруть звичайні токени (surface, accent). Використовуй лише в ілюстрації.
+   */
+  --color-scene-ink: #0b1530; /* контури, дах, текст у вікні (той самий navy, що canvas у Dark) */
+  --color-scene-paper: #ffffff; /* вікно, стіни, світлі деталі */
+  --color-scene-sky: #eaf0ff; /* панель вікна, картки, небо, шибки */
+  --color-scene-line: #c9d4f0; /* тонкі лінії й заглушки тексту */
+  --color-scene-accent: #2347e0; /* акцент у сцені (як accent у Light) */
+  --color-scene-accent-soft: #7fa2f5; /* світліший акцент */
+  --color-scene-warm: #f5c25b; /* теплий акцент: кнопка, олівець, зірка, промені */
+  --color-scene-green: #3fa36b; /* зелений: щит, крона */
+  --color-scene-hill: #5da07b; /* пагорб */
+  --color-scene-muted: #7d879e; /* напрямні й контур напису */
+
   /* ---------- Розміри тексту: розмір, висота рядка, трекінг, жирність ---------- */
   --text-*: initial;
 
@@ -84,6 +100,10 @@
   --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
+:root {
+  color-scheme: dark;
+}
+
 /* Відстань між секціями на мобільному: 64 px */
 @media (width < 40rem) {
   :root {
@@ -91,8 +111,27 @@
   }
 }
 
-/* Light — другий режим тих самих змінних. Вмикається атрибутом data-theme="light" на <html>. */
+/*
+ * Light — другий режим тих самих змінних.
+ * Вмикається атрибутом data-theme="light" на <html>, а без атрибута тема йде за системною
+ * (prefers-color-scheme). data-theme="dark" примусово лишає Dark.
+ * Значення нижче дублюються в двох місцях: міняй обидва.
+ */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --color-canvas: #f3f6fc;
+    --color-surface: #e1e9fb;
+    --color-line: #a9b7d9;
+    --color-accent: #2347e0;
+    --color-text: #0b1530;
+    --color-text-muted: #4a5780;
+    --color-danger: #c42b2b;
+    color-scheme: light;
+  }
+}
+
 [data-theme="light"] {
+  color-scheme: light;
   --color-canvas: #f3f6fc;
   --color-surface: #e1e9fb;
   --color-line: #a9b7d9;
@@ -100,4 +139,12 @@
   --color-text: #0b1530;
   --color-text-muted: #4a5780;
   --color-danger: #c42b2b;
+}
+
+/*
+ * Інтро першого екрана (src/app/HeroStage.tsx). Клас no-splash на <html> ставить скрипт у <head>,
+ * якщо заставку вже показано в цій сесії: тоді вона не блимає на повторних відкриттях.
+ */
+.no-splash [data-sc="splash"] {
+  display: none;
 }
