@@ -52,7 +52,7 @@ export function TokensPage() {
       <header className="flex flex-col gap-2">
         <p className="text-label uppercase text-accent">Foundations</p>
         <h1 className="text-display">Токени</h1>
-        <p className="text-lead text-text-muted">
+        <p className="text-lead text-text-muted italic">
           Кольори, розміри тексту, радіуси й пропорції сайту. Сторінка читає змінні з @theme, тож після зміни
           токена вона оновлюється сама.
         </p>
@@ -65,7 +65,7 @@ export function TokensPage() {
               <span className={`${c.swatch} border border-line rounded-card w-16 h-16 shrink-0`} />
               <span className="flex flex-col">
                 <code className="text-body-strong">{c.name}</code>
-                <span className="text-caption text-text-muted">{c.note}</span>
+                <span className="text-caption text-text-muted italic">{c.note}</span>
               </span>
             </li>
           ))}
@@ -73,14 +73,14 @@ export function TokensPage() {
       </Section>
 
       <Section title="Шкала шрифтів">
-        <p className="text-body text-text-muted">
+        <p className="text-body text-text-muted italic">
           Шрифт — DM Sans (font-sans). Кожен клас задає розмір, висоту рядка, трекінг і жирність разом.
         </p>
         <ul className="flex flex-col">
           {textSizes.map((t) => (
             <li key={t.name} className="flex flex-col gap-2 border-t border-line py-4">
               <span className="text-caption text-text-muted">
-                <code>{t.name}</code> · {t.note}
+                <code>{t.name}</code> · <em>{t.note}</em>
               </span>
               <span className={t.className}>Strona, o którą nie trzeba się martwić</span>
             </li>
@@ -94,7 +94,7 @@ export function TokensPage() {
             <li key={r.name} className="flex flex-col gap-3">
               <span className={`${r.className} block bg-surface border border-line w-48 h-16`} />
               <code className="text-caption-strong">{r.name}</code>
-              <span className="text-caption text-text-muted">{r.note}</span>
+              <span className="text-caption text-text-muted italic">{r.note}</span>
             </li>
           ))}
         </ul>
@@ -106,7 +106,7 @@ export function TokensPage() {
             <li key={a.name} className="flex flex-col gap-3 w-48">
               <span className={`${a.className} block bg-surface border border-line rounded-card`} />
               <code className="text-caption-strong">{a.name}</code>
-              <span className="text-caption text-text-muted">{a.note}</span>
+              <span className="text-caption text-text-muted italic">{a.note}</span>
             </li>
           ))}
         </ul>
