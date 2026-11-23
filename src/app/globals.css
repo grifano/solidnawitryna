@@ -1,7 +1,103 @@
 @import "tailwindcss";
 
 /*
- * Дизайн-токени (кольори, шрифти, відступи, радіуси) додаємо тут
- * у блоці @theme на наступному кроці. Стартових токенів create-next-app
- * (--background, --foreground, Geist, темна тема за медіазапитом) тут немає навмисно.
+ * Дизайн-токени SolidnaWitryna.
+ * Джерело правди — цей файл (код). Figma DS (файл SolidnaWitryna, сторінка Design System) —
+ * орієнтир: значення звідти, з погодженими змінами (line піднято, додано section, container-page,
+ * товщини рамок і фокус-кільце).
+ * Усе названо за роллю, а не за кольором. Кольори, шрифти, радіуси й розміри беремо тільки звідси.
+ *
+ * Відступи тут не оголошуємо: беремо стандартну шкалу Tailwind, тільки кроки
+ * 8, 12, 16, 24, 32 px = 2, 3, 4, 6, 8 (наприклад p-4, gap-6).
+ * Поля сторінки: 64 px на десктопі (px-16), 16 px на мобільному (px-4).
+ *
+ * static: усі змінні потрапляють у CSS завжди, навіть коли ще не використані в розмітці
+ * (потрібно для сторінки токенів у Storybook і для var(--color-*) у власних стилях).
  */
+@theme static {
+  /* ---------- Кольори (Dark, за замовчуванням) ---------- */
+  --color-*: initial;
+  --color-canvas: #0b1530; /* фон сторінки; текст на заливці accent */
+  --color-surface: #14245a; /* картки, смуга реалізацій, ореол фото */
+  --color-line: #2c427f; /* розділювачі й рамки карток та chips (лише декор) */
+  --color-accent: #6f94ff; /* кнопка, посилання, eyebrow, фокус */
+  --color-text: #f2f5ff; /* основний текст */
+  --color-text-muted: #9fb0dc; /* другорядний текст; межі полів і кнопок без заливки */
+  --color-danger: #ff8a80; /* помилка: текст і межа поля (червоний, відмінний від accent) */
+
+  /* ---------- Розміри тексту: розмір, висота рядка, трекінг, жирність ---------- */
+  --text-*: initial;
+
+  --text-display: 4rem; /* 64 px, головний заголовок (h1) */
+  --text-display--line-height: 4.3125rem; /* 69 px */
+  --text-display--letter-spacing: -0.03em;
+  --text-display--font-weight: 600;
+
+  --text-heading: 2rem; /* 32 px, заголовок секції (h2) */
+  --text-heading--line-height: 2.375rem; /* 38 px */
+  --text-heading--letter-spacing: -0.02em;
+  --text-heading--font-weight: 600;
+
+  --text-lead: 1.125rem; /* 18 px, лід під заголовком */
+  --text-lead--line-height: 1.75rem; /* 28 px */
+  --text-lead--font-weight: 400;
+
+  --text-lead-strong: 1.125rem; /* назва в картці */
+  --text-lead-strong--line-height: 1.75rem;
+  --text-lead-strong--font-weight: 600;
+
+  --text-body: 1rem; /* 16 px, основний текст */
+  --text-body--line-height: 1.5rem; /* 24 px */
+  --text-body--font-weight: 400;
+
+  --text-body-strong: 1rem; /* кнопка, пункт меню, посилання */
+  --text-body-strong--line-height: 1.5rem;
+  --text-body-strong--font-weight: 600;
+
+  --text-caption: 0.875rem; /* 14 px, підпис, chip */
+  --text-caption--line-height: 1.3125rem; /* 21 px */
+  --text-caption--font-weight: 400;
+
+  --text-caption-strong: 0.875rem; /* мала кнопка, перемикач мови */
+  --text-caption-strong--line-height: 1.3125rem;
+  --text-caption-strong--font-weight: 600;
+
+  --text-label: 0.875rem; /* eyebrow, заголовок смуги; регістр додає клас uppercase */
+  --text-label--line-height: 1.3125rem;
+  --text-label--letter-spacing: 0.14em;
+  --text-label--font-weight: 600;
+
+  /* ---------- Радіуси ---------- */
+  --radius-*: initial;
+  --radius-control: 999px; /* кнопки, поля, chips, перемикач, портрет (на квадраті дає коло) */
+  --radius-card: 12px; /* картки, смуга реалізацій */
+
+  /* ---------- Пропорції картинок (ширина / висота) ---------- */
+  --aspect-portrait: 1 / 1; /* портрет */
+  --aspect-cover: 4 / 3; /* обкладинка роботи */
+
+  /* ---------- Лише для сторінок, не для компонентів ---------- */
+  --container-page: 82rem; /* ширина контенту сторінки: 1312 px = 1440 − 2 × 64 (max-w-page) */
+  --spacing-section: 6rem; /* відстань між великими секціями: 96 px (py-section, gap-section) */
+
+  /* ---------- Шрифт (DM Sans підключений у fonts.ts) ---------- */
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Відстань між секціями на мобільному: 64 px */
+@media (width < 40rem) {
+  :root {
+    --spacing-section: 4rem;
+  }
+}
+
+/* Light — другий режим тих самих змінних. Вмикається атрибутом data-theme="light" на <html>. */
+[data-theme="light"] {
+  --color-canvas: #f3f6fc;
+  --color-surface: #e1e9fb;
+  --color-line: #a9b7d9;
+  --color-accent: #2347e0;
+  --color-text: #0b1530;
+  --color-text-muted: #4a5780;
+  --color-danger: #c42b2b;
+}
