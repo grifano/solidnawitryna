@@ -29,7 +29,10 @@
 
 ## Компоненти
 
-Заповнимо далі.
+Компоненти лежать у `src/components`, історія й docs поруч (`<Компонент>.stories.tsx`). Дивимось у Storybook (`npm run storybook`), одна історія на компонент, `title` латиницею (`Components/Button`).
+
+- **Button** (`src/components/Button.tsx`): варіанти `primary` (accent, текст `text-canvas`) і `secondary` (без заливки, межа `text-muted`); розміри `md` і `lg`; `rounded-control`. Стани: hover, focus (контур 2 px `accent`, відступ 3 px), disabled. Вимкнена кнопка робиться через `disabled` у пропсах (у DOM це `aria-disabled`, кнопка лишається у фокусі), пояснення передається в `disabledReason` (зв'язане через `aria-describedby`). Перехід: 150 мс на кольори, стискання до 97% при натисканні (не для вимкненої), без анімації при `motion-reduce`. Межа кнопки 2 px, а не 1,5 px: клас на 1,5 px без квадратних дужок Tailwind не створює.
+- Новий компонент: одразу історія з Controls і docs (параметри, варіанти й стани, токени за іменами, коли використовувати, як брати в код), тоді додаємо рядок сюди.
 
 ## Правила
 
