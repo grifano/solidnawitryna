@@ -130,6 +130,6 @@ solidnawitryna.pl — маркетинговий сайт, через який �
 
 Новий проєкт — тека `~/WebDev/solidnawitryna` (Next.js + Tailwind). Цей план ляже туди як `docs/plan.md`, поруч — `docs/brand.md`. Токени (вже готові після аудиту), хіро і дизайн-систему агент будує в наступному чаті.
 
-**Джерело для агента — старий репозиторій із концептом:** [grifano/solidnawitryna](https://github.com/grifano/solidnawitryna), локально `~/WebDev/solidnawitryna-dz2`. Там анімований хіро на чистому HTML/CSS/JS (`index.html`, `css/styles.css`, `js/main.js`) і фото в `assets/img/`. Звідти беремо концепт хіро і фото, а код переписуємо під Next.js, не копіюємо.
+**Джерело для агента — старий репозиторій із концептом:** [grifano/solidnawitryna-pilot](https://github.com/grifano/solidnawitryna-pilot), локально `~/WebDev/solidnawitryna-dz2`. Там анімований хіро на чистому HTML/CSS/JS (`index.html`, `css/styles.css`, `js/main.js`) і фото в `assets/img/`. Звідти беремо концепт хіро і фото, а код переписуємо під Next.js, не копіюємо.
 
 Старі `docs/plan.html` і `CLAUDE.md` лишаються в старому репозиторії. Агент нового проєкту їх не читає: джерело правди — `docs/plan.md` і `docs/brand.md`.
