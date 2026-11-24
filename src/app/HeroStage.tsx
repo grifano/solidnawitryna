@@ -449,7 +449,7 @@ export function HeroStage() {
   }, []);
 
   return (
-    <div ref={rootRef} className="relative mx-auto w-full max-w-2xl">
+    <div ref={rootRef} className="relative mx-auto w-full max-w-stage">
       {/* ---------- Заставка ---------- */}
       <div
         data-sc="splash"
@@ -460,24 +460,28 @@ export function HeroStage() {
           data-sc="sp-in"
           className="flex flex-col items-center gap-6 opacity-0"
         >
-          <div className="relative h-32 w-full max-w-xs">
+          {/* Знак і фото лежать в одній клітинці сітки й центруються по ній; розбігаються вони анімацією. */}
+          <div className="grid place-items-center">
             <div
               data-sc="sp-mark"
-              className="absolute top-0 left-1/2 -ml-16 grid size-32 place-items-center"
+              className="col-start-1 row-start-1 aspect-portrait w-splash-mark"
             >
-              <div className="scale-400">
-                <Logo variant="mark" label="Logo" />
-              </div>
+              <Logo
+                variant="mark"
+                label="Logo"
+                className="size-full"
+                markClassName="size-full"
+              />
             </div>
             <Image
               data-sc="sp-photo"
               src={portrait}
               alt=""
               sizes="8rem"
-              className="absolute top-0 left-1/2 -ml-16 aspect-portrait size-32 rounded-control border-2 border-accent object-cover"
+              className="col-start-1 row-start-1 aspect-portrait w-splash-mark rounded-control border-2 border-accent object-cover"
             />
           </div>
-          <div className="flex overflow-hidden pb-1 text-heading font-sans sm:text-display">
+          <div className="flex overflow-hidden pb-2 text-heading font-sans md:text-display">
             {WORD.map(([text, color]) =>
               text.split("").map((ch, i) => (
                 <span
@@ -502,7 +506,7 @@ export function HeroStage() {
         {/* ---------- Портрет з кільцем (відкочується) ---------- */}
         <div
           data-sc="rings"
-          className="absolute inset-0 z-10 m-auto aspect-portrait w-3/4 rounded-control border-2 border-accent bg-surface"
+          className="absolute inset-0 z-10 m-auto aspect-portrait w-portrait-ring rounded-control border-2 border-accent bg-surface"
         />
         <Image
           data-sc="photo"
@@ -510,7 +514,7 @@ export function HeroStage() {
           alt="Portret Serhii Orlenko"
           preload
           sizes="(min-width: 64rem) 28rem, 70vw"
-          className="absolute inset-0 z-20 m-auto aspect-portrait w-2/3 rounded-control object-cover"
+          className="absolute inset-0 z-20 m-auto aspect-portrait w-portrait-photo rounded-control object-cover"
         />
 
         {/* ---------- Сцена ---------- */}
@@ -547,7 +551,7 @@ export function HeroStage() {
               className="stroke-accent"
             />
 
-            <g id="sc-win" className="drop-shadow-xl drop-shadow-scene-ink/35">
+            <g id="sc-win" className="drop-shadow-scene">
               <rect
                 x="20"
                 y="70"

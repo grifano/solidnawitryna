@@ -50,7 +50,7 @@ const base =
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    "border-accent bg-accent text-canvas not-aria-disabled:hover:bg-accent/85",
+    "border-accent bg-accent text-canvas not-aria-disabled:hover:bg-accent-hover",
   secondary:
     "border-text-muted bg-transparent text-text not-aria-disabled:hover:bg-surface",
 };

@@ -49,6 +49,7 @@ _Кругла кнопка зі значком і без тексту для д�
 | --- | --- | --- |
 | \`label\` | назва дії для скрінрідера (\`aria-label\`), обов'язкова | немає |
 | \`children\` | значок: SVG з \`fill-current\`, розмір \`size-6\` | немає |
+| \`disabled\` | вимкнена кнопка (\`aria-disabled\`, лишається у фокусі) | \`false\` |
 | \`type\` | \`button\`, \`submit\`, \`reset\` | \`button\` |
 | \`onClick\`, \`className\` та решта атрибутів \`<button>\` | як у звичайної кнопки | немає |
 
@@ -57,13 +58,14 @@ _Кругла кнопка зі значком і без тексту для д�
 - Один вигляд: без заливки, межа \`text-muted\` 2 px (контраст до фону не менше 3:1), значок кольору \`text\`, коло.
 - Hover: заливка \`surface\`.
 - Focus (Tab на клавіатурі): контур 2 px кольору \`accent\` з відступом 3 px, контраст до фону не менше 3:1.
+- Disabled (\`disabled\`): заливка \`surface\`, межа \`line\`, значок \`text-muted\`, курсор «заборонено», без hover і стискання. Робиться через \`aria-disabled\`, тож кнопка лишається у фокусі (Tab її не пропускає), клік нічого не робить. Місця для пояснення поруч немає: якщо причина важлива, напиши її текстом біля кнопки.
 - Перехід 150 мс; при натисканні кнопка стискається до 97% (\`active:scale-97\`). При «зменшити рух» у системі анімація вимкнена (\`motion-reduce:transition-none\`).
 - Розмір 52 × 52 px (значок 24 px, \`p-3\`, межа 2 px), більше за мінімальну ціль дотику 44 px.
 - Якщо значок змінюється зі станом (пауза ↔ відтворення), міняй і \`label\`: скрінрідер читає дію, яка станеться після натискання («Zatrzymaj animację» → «Wznów animację»).
 
 ## Токени
 
-- Кольори: \`text\`, \`text-muted\`, \`surface\`, \`accent\`.
+- Кольори: \`text\`, \`text-muted\`, \`surface\`, \`line\`, \`accent\`.
 - Радіус: \`rounded-control\`.
 - Відступи: \`p-3\`, значок \`size-6\`.
 
@@ -88,6 +90,7 @@ import { IconButton } from "@/components/IconButton";
   },
   argTypes: {
     label: { control: "text", description: "Назва дії для скрінрідера" },
+    disabled: { control: "boolean", description: "Вимкнена кнопка (aria-disabled)" },
   },
   args: {
     label: "Zatrzymaj animację",
@@ -99,6 +102,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
+
+/** Вимкнена кнопка: без hover і стискання, лишається у фокусі. */
+export const Disabled: Story = {
+  args: { disabled: true },
+};
 
 /** Значок і назва міняються зі станом: пауза ↔ відтворення. */
 export const PauseAndPlay: Story = {

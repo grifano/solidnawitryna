@@ -39,7 +39,7 @@ export interface NavigationProps {
 }
 
 const itemBase =
-  "block rounded-control border-2 px-4 py-3 text-heading font-sans sm:py-2 sm:text-body-strong " +
+  "block rounded-control border-2 px-4 py-3 text-heading font-sans lg:py-2 lg:text-body-strong " +
   "outline-accent focus-visible:outline-2 focus-visible:outline-offset-3 " +
   "transition duration-150 ease-out motion-reduce:transition-none " +
   "hover:bg-surface hover:text-text";
@@ -48,15 +48,18 @@ const itemDefault = "border-transparent text-text-muted";
 const itemActive = "border-accent text-text";
 
 /*
- * Один список для обох екранів. На широкому це звичайний ряд. На вузькому (max-sm)
- * відкрите меню займає весь екран (fixed inset-0) на фоні canvas, а шапка (лого й кнопка)
- * лишається над ним: сторінка має дати їй z-index вище за контент, див. page.tsx.
- * Зверху лишаємо місце під шапку.
+ * Один список для обох екранів. На широкому (від 1024 px) це звичайний ряд (обгортка лише
+ * `contents`). На вузькому відкрите меню лягає поверх сторінки від нижнього краю шапки до низу екрана.
+ * Обгортка (fixed, overflow-hidden) обрізає панель по цій межі: панель виїжджає з-під шапки й ніколи
+ * не заїжджає на лого та підпис «by …». Верхній край обгортки рахуємо при відкритті за нижнім
+ * краєм шапки, тому відступ зверху в панелі — звичайний pt-8.
  */
+const wrapperBase =
+  "max-lg:fixed max-lg:inset-x-0 max-lg:bottom-0 max-lg:overflow-hidden lg:contents";
 const listBase =
   "flex gap-2 " +
-  "max-sm:fixed max-sm:inset-0 max-sm:flex-col max-sm:overflow-y-auto " +
-  "max-sm:bg-canvas max-sm:px-4 max-sm:pt-24 max-sm:pb-8";
+  "max-lg:h-full max-lg:flex-col max-lg:overflow-y-auto " +
+  "max-lg:bg-canvas max-lg:px-4 md:max-lg:px-16 max-lg:pt-8 max-lg:pb-8";
 
 /*
  * Таймлайн анімації меню той самий, що в заставки першого екрана (HeroStage):
@@ -70,7 +73,7 @@ const ITEM_MS = 450;
 const ITEM_STEP_MS = 70;
 const ITEMS_DELAY_MS = 300;
 
-const isNarrow = () => window.matchMedia("(width < 40rem)").matches;
+const isNarrow = () => window.matchMedia("(width < 64rem)").matches;
 const isReduced = () =>
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -105,9 +108,13 @@ export function Navigation({
   const [open, setOpen] = useState(false);
   // Список видно на вузькому екрані, поки меню відкрите або триває анімація закриття.
   const [shown, setShown] = useState(false);
+  // Де на вузькому екрані лежить нижній край шапки (px у вікні): звідти починається панель,
+  // а по цій лінії малюється підкреслення.
+  const [edge, setEdge] = useState({ top: 0, left: 0, width: 0 });
   const listId = useId();
   const navRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  const lineRef = useRef<HTMLSpanElement>(null);
   const animations = useRef<Animation[]>([]);
 
   const close = useCallback(() => {
@@ -131,18 +138,29 @@ export function Navigation({
       [{ transform: "none" }, { transform: "translateY(-100%)" }],
       { duration: PANEL_MS, delay: 100, easing: LIFT, fill: "forwards" },
     ).onfinish = () => setShown(false);
+    // Підкреслення стягується справа наліво.
+    if (lineRef.current)
+      play(
+        animations,
+        lineRef.current,
+        [{ transform: "none" }, { transform: "scaleX(0)" }],
+        { duration: PANEL_MS, delay: 100, easing: LIFT, fill: "forwards" },
+      );
   }, []);
 
   function toggle() {
     if (open) {
       close();
     } else {
+      const box = navRef.current?.closest("header")?.getBoundingClientRect();
+      if (box)
+        setEdge({ top: Math.max(0, box.bottom), left: box.left, width: box.width });
       setOpen(true);
       setShown(true);
     }
   }
 
-  // Анімація відкриття. Layout-ефект, щоб перший кадр уже був із панеллю над екраном.
+  // Анімація відкриття. Layout-ефект, щоб перший кадр уже був із панеллю сховану під шапкою.
   useLayoutEffect(() => {
     const list = listRef.current;
     if (!open || !list || !isNarrow() || isReduced()) return;
@@ -153,6 +171,14 @@ export function Navigation({
       [{ transform: "translateY(-100%)" }, { transform: "none" }],
       { duration: PANEL_MS, easing: LIFT, fill: "backwards" },
     );
+    // Підкреслення малюється зліва направо, поки панель виїжджає.
+    if (lineRef.current)
+      play(
+        animations,
+        lineRef.current,
+        [{ transform: "scaleX(0)" }, { transform: "none" }],
+        { duration: PANEL_MS, easing: LIFT, fill: "backwards" },
+      );
     list.querySelectorAll("li").forEach((item, index) =>
       play(
         animations,
@@ -224,7 +250,7 @@ export function Navigation({
         aria-expanded={open}
         aria-controls={listId}
         onClick={toggle}
-        className="relative z-10 sm:hidden"
+        className="relative z-10 lg:hidden"
       >
         <span className="grid">
           <span
@@ -241,29 +267,39 @@ export function Navigation({
           </span>
         </span>
       </Button>
-      <ul
-        id={listId}
-        ref={listRef}
-        className={[listBase, shown ? "" : "max-sm:hidden"].join(" ")}
+      <div
+        style={{ top: edge.top }}
+        className={[wrapperBase, shown ? "" : "max-lg:hidden"].join(" ")}
       >
-        {items.map((item) => {
-          const active = item.href === activeHref;
-          return (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                aria-current={active ? "page" : undefined}
-                onClick={close}
-                className={[itemBase, active ? itemActive : itemDefault].join(
-                  " ",
-                )}
-              >
-                {item.label}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+        <ul id={listId} ref={listRef} className={listBase}>
+          {items.map((item) => {
+            const active = item.href === activeHref;
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  onClick={close}
+                  className={[itemBase, active ? itemActive : itemDefault].join(
+                    " ",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+      {/* Підкреслення шапки: лежить рівно на її нижній межі й малюється, поки меню відкрите. */}
+      {shown && (
+        <span
+          ref={lineRef}
+          aria-hidden="true"
+          style={{ top: edge.top - 1, left: edge.left, width: edge.width }}
+          className="fixed h-px origin-left bg-accent lg:hidden"
+        />
+      )}
     </nav>
   );
 }

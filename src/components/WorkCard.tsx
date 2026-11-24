@@ -39,7 +39,7 @@ export function WorkCard({
   image,
   imageAlt = "",
   href,
-  sizes = "(min-width: 40rem) 33vw, 100vw",
+  sizes = "(min-width: 64rem) 33vw, 100vw",
   className,
 }: WorkCardProps) {
   return (

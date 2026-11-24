@@ -10,6 +10,7 @@ const colors = [
   { name: "surface", swatch: "bg-surface", note: "картки" },
   { name: "line", swatch: "bg-line", note: "лише декор: розділювачі, рамки карток і chips" },
   { name: "accent", swatch: "bg-accent", note: "кнопка, посилання, eyebrow, фокус" },
+  { name: "accent-hover", swatch: "bg-accent-hover", note: "заливка основної кнопки при hover" },
   { name: "text", swatch: "bg-text", note: "основний текст" },
   { name: "text-muted", swatch: "bg-text-muted", note: "другорядний текст; межі полів і кнопок без заливки" },
   { name: "danger", swatch: "bg-danger", note: "помилка: текст і межа поля" },
@@ -37,6 +38,13 @@ const aspects = [
   { name: "aspect-cover", className: "aspect-cover", note: "обкладинка роботи" },
 ];
 
+const breakpoints = [
+  { name: "(без префікса)", width: "375 px", note: "телефон, база" },
+  { name: "md:", width: "768 px", note: "планшет вертикально" },
+  { name: "lg:", width: "1024 px", note: "невеликий ноутбук" },
+  { name: "xl:", width: "1440 px", note: "широкий екран" },
+];
+
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="flex flex-col gap-4">
@@ -59,7 +67,7 @@ export function TokensPage() {
       </header>
 
       <Section title="Кольори">
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {colors.map((c) => (
             <li key={c.name} className="flex items-center gap-4">
               <span className={`${c.swatch} border border-line rounded-card w-16 h-16 shrink-0`} />
@@ -95,6 +103,28 @@ export function TokensPage() {
               <span className={`${r.className} block bg-surface border border-line w-48 h-16`} />
               <code className="text-caption-strong">{r.name}</code>
               <span className="text-caption text-text-muted italic">{r.note}</span>
+            </li>
+          ))}
+        </ul>
+      </Section>
+
+      <Section title="Тіні">
+        <ul className="flex flex-wrap gap-6">
+          <li className="flex flex-col gap-3">
+            <span className="block size-8 rounded-card bg-surface drop-shadow-scene" />
+            <code className="text-caption-strong">drop-shadow-scene</code>
+            <span className="text-caption text-text-muted italic">вікно в ілюстрації першого екрана</span>
+          </li>
+        </ul>
+      </Section>
+
+      <Section title="Брейкпоінти">
+        <ul className="flex flex-col">
+          {breakpoints.map((b) => (
+            <li key={b.name} className="grid grid-cols-3 gap-4 border-t border-line py-4">
+              <code className="text-body-strong">{b.name}</code>
+              <span className="text-body">{b.width}</span>
+              <span className="text-caption text-text-muted italic">{b.note}</span>
             </li>
           ))}
         </ul>

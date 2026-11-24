@@ -18,15 +18,36 @@ export interface LogoProps {
   label?: string;
   /** Клас для зовнішнього елемента (положення в шапці тощо). */
   className?: string;
+  /** Клас розміру знака. За замовчуванням `size-8` (32 px); `size-full` розтягує знак на батьківський блок. */
+  markClassName?: string;
 }
 
 /**
  * Знак «Rama»: вікно браузера з трьома крапками й літерою W.
  * Кольори тільки з токенів, тому знак сам перемикається між Dark і Light.
  */
-function LogoMark() {
+function LogoMark({
+  className,
+  tilts,
+}: {
+  className: string;
+  tilts: boolean;
+}) {
   return (
-    <svg viewBox="0 0 120 120" aria-hidden="true" className="size-8 shrink-0">
+    <svg
+      viewBox="0 0 120 120"
+      aria-hidden="true"
+      className={[
+        className,
+        "shrink-0",
+        // Hover на посиланні: знак плавно припіднімається вправо й зависає на нижньому правому куті.
+        tilts
+          ? "origin-bottom-right transition-transform duration-150 ease-out group-hover:rotate-6 motion-reduce:transition-none"
+          : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <rect x="4" y="4" width="112" height="112" rx="28" className="fill-text" />
       <circle cx="27" cy="22" r="4.5" className="fill-canvas" />
       <circle cx="40" cy="22" r="4.5" className="fill-canvas" />
@@ -47,7 +68,7 @@ function LogoMark() {
 const base = "inline-flex items-center gap-3 font-sans text-lead-strong text-text";
 
 const linkStyles =
-  "outline-accent focus-visible:outline-2 focus-visible:outline-offset-3";
+  "group outline-accent focus-visible:outline-2 focus-visible:outline-offset-3";
 
 /**
  * Лого сайту: знак «Rama» і напис «solidnawitryna.pl». Може вести на головну.
@@ -57,10 +78,11 @@ export function Logo({
   href,
   label = "solidnawitryna.pl by Serhii Orlenko",
   className,
+  markClassName = "size-8",
 }: LogoProps) {
   const content = (
     <>
-      <LogoMark />
+      <LogoMark className={markClassName} tilts={Boolean(href)} />
       {variant === "full" && (
         <span aria-hidden="true">
           solidna<span className="text-accent">witryna</span>

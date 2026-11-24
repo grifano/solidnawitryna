@@ -21,12 +21,12 @@ export default function Home() {
     <>
       <a
         href="#main"
-        className="sr-only rounded-control bg-accent px-4 py-2 text-body-strong text-canvas focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-10"
+        className="sr-only rounded-control bg-accent px-4 py-2 text-body-strong text-canvas focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-10 outline-accent focus-visible:outline-2 focus-visible:outline-offset-3"
       >
         Przejdź do treści
       </a>
 
-      <div className="px-4 sm:px-16">
+      <div className="px-4 md:px-16">
         <header className="relative z-40 mx-auto flex max-w-page items-center justify-between gap-4 border-b border-line py-4">
           <div className="flex min-w-0 items-center gap-4">
             {/* Лого лежить зверху й має фон: підпис виїжджає з-під нього (див. HeroStage). */}
@@ -37,7 +37,7 @@ export default function Home() {
             />
             <div
               data-intro="by"
-              className="relative z-0 hidden items-center gap-3 border-l border-line pl-4 opacity-0 sm:flex"
+              className="relative z-0 hidden items-center gap-3 border-l border-line pl-4 opacity-0 md:flex"
             >
               <Image
                 src={portrait}
@@ -47,7 +47,7 @@ export default function Home() {
               />
               <span data-intro="by-text" className="text-caption text-text-muted">
                 by{" "}
-                <span className="text-body-strong block text-text sm:inline">
+                <span className="text-body-strong block text-text md:inline">
                   Serhii Orlenko
                 </span>
               </span>
@@ -57,23 +57,27 @@ export default function Home() {
         </header>
       </div>
 
-      <main id="main" className="px-4 sm:px-16">
+      <main id="main" className="px-4 md:px-16">
         <section
           id="top"
-          className="mx-auto grid max-w-page items-center gap-8 py-section lg:grid-cols-2 lg:gap-16"
+          className="mx-auto grid max-w-page items-center gap-8 py-section lg:grid-cols-2"
         >
           <div className="flex flex-col items-start gap-6">
             <p data-intro="reveal" className="text-label text-accent uppercase">
               Marka i strona dla małych firm usługowych
             </p>
-            <h1 className="text-heading sm:text-display">
+            <h1 className="text-heading md:text-display">
               Strona, o którą nie trzeba się martwić
             </h1>
-            <p data-intro="reveal" className="max-w-xl text-lead text-text-muted">
+            <p data-intro="reveal" className="max-w-prose text-lead text-text-muted">
               Robię markę i stronę, a potem się nią opiekuję. SEO, aktualizacje,
               kopie zapasowe i bezpieczeństwo biorę na siebie.
             </p>
-            <div data-intro="reveal" className="flex flex-wrap gap-4">
+            {/* 375: кнопки на всю ширину, одна під одною. Від 768: за шириною тексту, в ряд. */}
+            <div
+              data-intro="reveal"
+              className="flex w-full flex-col gap-4 md:w-auto md:flex-row md:flex-wrap"
+            >
               <Button size="lg" href={FORM_HREF}>
                 Zamów bezpłatny mini-audyt
               </Button>
