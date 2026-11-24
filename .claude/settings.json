@@ -3,6 +3,7 @@
     "ask": [
       "Bash(vercel --prod *)",
       "Bash(vercel deploy --prod *)",
+      "Bash(vercel --target=production *)",
       "Bash(vercel deploy --target=production *)",
       "Bash(vercel deploy --target production *)",
       "Bash(vercel promote *)",

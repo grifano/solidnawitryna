@@ -73,9 +73,9 @@
 
 - **Button:** варіанти `primary` (заливка `accent`, hover `accent-hover`, текст `text-canvas`) і `secondary` (межа `text-muted`, hover `surface`); розміри `md`, `lg`. З `href` стає посиланням `next/link` (сторінка, якір, зовнішня адреса в новій вкладці); `disabled` з `href` не діє. Вимкнена: `disabled` у пропсах дає `aria-disabled`, пояснення в `disabledReason` (`aria-describedby`).
 - **FormField:** поле з підписом над ним (`label` обов'язковий), `error`, `disabled`. Межа `text-muted` 2 px. Стани: default, hover (межа `text`), focus, заповнене, помилка (`danger`, іконка, `aria-invalid`), disabled.
-- **WorkCard:** вся картка — одне посилання. Пропси `title`, `description`, `image`, `imageAlt`, `href`, `sizes`. Обкладинка `aspect-cover`, `rounded-card`, рамка `line`. Hover: рамка й назва `accent`.
-- **Navigation** (клієнтський): пропси `items`, `activeHref`, `label`, `menuLabel`, `closeLabel`. Активний пункт `aria-current="page"`. Менше 1024 px згортається в кнопку-меню на весь екран; закривається кнопкою, Escape або вибором пункту.
-- **Logo:** `variant` `full` або `mark`; з `href` — посилання, без нього `role="img"`. Hover: знак припіднімається вправо (`rotate-6`).
+- **WorkCard:** вся картка — одне посилання. Пропси `title`, `description`, `image`, `imageAlt`, `href`, `sizes`, `disabled`, `disabledReason`. Обкладинка `aspect-cover`, `rounded-card`, рамка `line`. Hover: рамка й назва `accent`. Disabled: без адреси (`aria-disabled`), у фокусі, hover немає, обкладинка сіра.
+- **Navigation** (клієнтський): пропси `items`, `activeHref`, `label`, `menuLabel`, `closeLabel`. Активний пункт `aria-current="page"`. Пункт `items` може бути `disabled` (з `disabledReason`). Менше 1024 px згортається в кнопку-меню на весь екран; закривається кнопкою, Escape або вибором пункту.
+- **Logo:** `variant` `full` або `mark`; з `href` — посилання, без нього `role="img"`. Hover: знак припіднімається вправо (`rotate-6`). `disabled` (лише з `href`): без адреси (`aria-disabled`), у фокусі, hover немає.
 - **Chip:** коротка неінтерактивна позначка, рамка `line`, `text-caption`, `rounded-control`. Кілька — в `ul` > `li` з `flex flex-wrap gap-3`.
 - **IconButton:** кругла кнопка зі значком; `label` обов'язковий (`aria-label`), `disabled` через `aria-disabled`, значок `size-6 fill-current`.
 - Спільне для інтерактивних: focus — контур 2 px `accent`, відступ 3 px; перехід 150 мс; без анімації при `motion-reduce`.

@@ -17,6 +17,16 @@ export interface NavigationItem {
   label: string;
   /** Адреса, куди веде пункт. */
   href: string;
+  /**
+   * Вимкнений пункт. Робиться через `aria-disabled`, без адреси: пункт лишається у фокусі,
+   * але ніде не веде й не закриває меню. Hover-ефекту немає.
+   */
+  disabled?: boolean;
+  /**
+   * Пояснення для скрінрідера, чому пункт вимкнений. Зв'язується з пунктом через
+   * `aria-describedby`, на екрані не показується. Працює лише при `disabled`.
+   */
+  disabledReason?: string;
 }
 
 export interface NavigationProps {
@@ -42,10 +52,12 @@ const itemBase =
   "block rounded-control border-2 px-4 py-3 text-heading font-sans lg:py-2 lg:text-body-strong " +
   "outline-accent focus-visible:outline-2 focus-visible:outline-offset-3 " +
   "transition duration-150 ease-out motion-reduce:transition-none " +
-  "hover:bg-surface hover:text-text";
+  "not-aria-disabled:hover:bg-surface not-aria-disabled:hover:text-text";
 
 const itemDefault = "border-transparent text-text-muted";
 const itemActive = "border-accent text-text";
+const itemDisabled =
+  "cursor-not-allowed border-line border-dashed text-text-muted";
 
 /*
  * Один список для обох екранів. На широкому (від 1024 px) це звичайний ряд (обгортка лише
@@ -272,8 +284,29 @@ export function Navigation({
         className={[wrapperBase, shown ? "" : "max-lg:hidden"].join(" ")}
       >
         <ul id={listId} ref={listRef} className={listBase}>
-          {items.map((item) => {
-            const active = item.href === activeHref;
+          {items.map((item, index) => {
+            const active = !item.disabled && item.href === activeHref;
+            if (item.disabled) {
+              const reasonId = `${listId}-reason-${index}`;
+              return (
+                <li key={item.href}>
+                  <span
+                    role="link"
+                    tabIndex={0}
+                    aria-disabled="true"
+                    aria-describedby={item.disabledReason ? reasonId : undefined}
+                    className={[itemBase, itemDisabled].join(" ")}
+                  >
+                    {item.label}
+                    {item.disabledReason && (
+                      <span id={reasonId} className="sr-only">
+                        {item.disabledReason}
+                      </span>
+                    )}
+                  </span>
+                </li>
+              );
+            }
             return (
               <li key={item.href}>
                 <Link

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useId } from "react";
 
 export type LogoVariant = "full" | "mark";
 
@@ -16,6 +17,16 @@ export interface LogoProps {
    * інакше голосове керування не знайде лого за видимим написом.
    */
   label?: string;
+  /**
+   * Вимкнене лого-посилання (працює лише з `href`). Робиться через `aria-disabled`, без адреси:
+   * лого лишається у фокусі, але ніде не веде. Hover-ефекту немає, знак стає сірим.
+   */
+  disabled?: boolean;
+  /**
+   * Пояснення для скрінрідера, чому лого вимкнене. Зв'язується з лого через `aria-describedby`,
+   * на екрані не показується. Працює лише при `disabled`.
+   */
+  disabledReason?: string;
   /** Клас для зовнішнього елемента (положення в шапці тощо). */
   className?: string;
   /** Клас розміру знака. За замовчуванням `size-8` (32 px); `size-full` розтягує знак на батьківський блок. */
@@ -29,9 +40,11 @@ export interface LogoProps {
 function LogoMark({
   className,
   tilts,
+  muted,
 }: {
   className: string;
   tilts: boolean;
+  muted: boolean;
 }) {
   return (
     <svg
@@ -44,6 +57,7 @@ function LogoMark({
         tilts
           ? "origin-bottom-right transition-transform duration-150 ease-out group-hover:rotate-6 motion-reduce:transition-none"
           : "",
+        muted ? "grayscale" : "",
       ]
         .filter(Boolean)
         .join(" ")}
@@ -77,20 +91,51 @@ export function Logo({
   variant = "full",
   href,
   label = "solidnawitryna.pl by Serhii Orlenko",
+  disabled = false,
+  disabledReason,
   className,
   markClassName = "size-8",
 }: LogoProps) {
+  const reasonId = useId();
+  const isDisabled = Boolean(href) && disabled;
   const content = (
     <>
-      <LogoMark className={markClassName} tilts={Boolean(href)} />
+      <LogoMark
+        className={markClassName}
+        tilts={Boolean(href) && !isDisabled}
+        muted={isDisabled}
+      />
       {variant === "full" && (
         <span aria-hidden="true">
-          solidna<span className="text-accent">witryna</span>
+          solidna<span className={isDisabled ? "" : "text-accent"}>witryna</span>
           <span className="text-text-muted">.pl</span>
         </span>
       )}
     </>
   );
+
+  if (isDisabled) {
+    // Без href: посилання, що ніде не веде. Лишається у фокусі (tabIndex), як вимкнена Button.
+    return (
+      <span
+        role="link"
+        tabIndex={0}
+        aria-disabled="true"
+        aria-label={label}
+        aria-describedby={disabledReason ? reasonId : undefined}
+        className={[base, linkStyles, "cursor-not-allowed text-text-muted", className]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        {content}
+        {disabledReason && (
+          <span id={reasonId} className="sr-only">
+            {disabledReason}
+          </span>
+        )}
+      </span>
+    );
+  }
 
   if (href) {
     return (

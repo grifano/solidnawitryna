@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Logo } from "./Logo";
-import { Navigation } from "./Navigation";
+import { Navigation, type NavigationProps } from "./Navigation";
+
+// Керувальний аргумент лише для історії: у Controls вимикає один пункт (у самого компонента такого пропса немає, disabled стоїть на пункті).
+type StoryArgs = NavigationProps & { disabledHref: string };
 
 const items = [
   { label: "Prace", href: "/prace" },
@@ -12,6 +15,16 @@ const meta = {
   title: "Components/Navigation",
   component: Navigation,
   tags: ["autodocs"],
+  render: ({ disabledHref, ...args }) => (
+    <Navigation
+      {...args}
+      items={args.items.map((item) =>
+        item.href === disabledHref
+          ? { ...item, disabled: true, disabledReason: "Sekcja jest w przygotowaniu" }
+          : item,
+      )}
+    />
+  ),
   // Фон полотна Storybook білий, а токени за замовчуванням темні: ставимо фон canvas.
   // Навігація стоїть у шапці над текстом, щоб було видно: відкрите меню на вузькому екрані займає весь екран.
   decorators: [
@@ -46,14 +59,14 @@ _Меню сайту: пункти, за якими користувач пер�
 
 | Параметр | Значення | За замовчуванням |
 | --- | --- | --- |
-| \`items\` | список пунктів \`{ label, href }\` | обов'язковий |
+| \`items\` | список пунктів \`{ label, href, disabled?, disabledReason? }\` | обов'язковий |
 | \`activeHref\` | \`href\` активного пункту; порожнє значення: активного немає | немає |
 | \`label\` | назва навігації для скрінрідера (\`aria-label\`) | \`Menu główne\` |
 | \`menuLabel\` | текст кнопки на вузькому екрані | \`Menu\` |
 | \`closeLabel\` | текст тієї ж кнопки, коли меню відкрите | \`Zamknij\` |
 | \`className\` | клас для зовнішнього \`nav\` | немає |
 
-Активний пункт у Controls перемикається параметром \`activeHref\`.
+Активний пункт у Controls перемикається параметром \`activeHref\`. Вимкнений пункт перемикається параметром «disabledHref» (він є лише в історії; у коді \`disabled\` і \`disabledReason\` ставляться на самому пункті в \`items\`).
 
 ## Варіанти й стани
 
@@ -64,13 +77,14 @@ _Меню сайту: пункти, за якими користувач пер�
 - Вузький екран (менше 1024 px, тобто 375 і 768): пункти сховані, видно кнопку «Menu» (вторинна \`Button\`). Кнопка має \`aria-expanded\` і \`aria-controls\`. Відкрите меню лягає поверх сторінки (\`fixed\`, фон \`canvas\`) від нижнього краю шапки до низу екрана і виїжджає з-під шапки: обгортка з \`overflow-hidden\` обрізає панель по цій межі, тож вона не заходить на лого й підпис «by …». Верхній край обгортки рахується при відкритті. Нижню межу шапки підкреслює лінія \`accent\` 1 px: при відкритті вона малюється зліва направо, при закритті стягується справа наліво, пункти йдуть стовпчиком великим текстом (\`text-heading\`), сторінка під меню не прокручується. Шапка (лого й кнопка) лишається над меню на тому самому місці: кнопка не рухається й не міняє ширину, підпис «Menu» плавно (150 мс) змінюється на «Zamknij» в одній клітинці. Для цього шапка сторінки має \`relative z-40\`, а лого й кнопка вищі за список.
 - Анімація меню (та сама, що в заставки першого екрана): відкриття — панель виїжджає з-під шапки за 600 мс (\`cubic-bezier(.7,0,.2,1)\`), пункти виринають (прозорість і зсув 18 px) за 450 мс із кроком 70 мс, починаючи з 300 мс. Закриття — пункти гаснуть за 200 мс, панель піднімається за 600 мс. При «зменшити рух» меню відкривається й закривається миттєво.
 - Закриття меню: клавіша Escape (фокус повертається на кнопку «Menu»), повторний клік по кнопці або вибір пункту.
+- Disabled: пункт з \`disabled\` робиться через \`aria-disabled\`, без адреси (\`role="link"\`, \`tabIndex=0\`). Він лишається у фокусі, нікуди не веде й не закриває меню. Межа 2 px \`line\` пунктиром, текст \`text-muted\`, курсор \`not-allowed\`, hover-ефекту немає. Вимкнений пункт не буває активним. Пояснення \`disabledReason\` читає скрінрідер через \`aria-describedby\`, на екрані його не видно.
 - Перехід: колір заливки, межі й тексту змінюється за 150 мс. При «зменшити рух» у системі анімація вимкнена (\`motion-reduce:transition-none\`).
 
 Вузький екран дивись через Viewport у тулбарі Storybook (іконка з прямокутником зверху, вибери мобільний розмір).
 
 ## Токени
 
-- Кольори: \`text\`, \`text-muted\`, \`surface\`, \`canvas\` (фон меню на весь екран), \`accent\`.
+- Кольори: \`text\`, \`text-muted\`, \`surface\`, \`canvas\` (фон меню на весь екран), \`accent\`, \`line\` (межа вимкненого пункту).
 - Текст: \`text-body-strong\` (пункти на широкому екрані), \`text-heading\` (пункти у відкритому меню на вузькому).
 - Радіуси: \`rounded-control\` (пункт).
 - Анімація: тривалості 600, 450, 200 і 150 мс, криві як у заставки першого екрана.
@@ -121,9 +135,22 @@ export function SiteNavigation() {
       options: ["", "/prace", "/o-mnie", "/kontakt"],
       description: "Активний пункт (href поточної сторінки)",
     },
+    disabledHref: {
+      control: {
+        type: "select",
+        labels: {
+          "": "Немає вимкненого",
+          "/prace": "Prace",
+          "/o-mnie": "O mnie",
+          "/kontakt": "Kontakt",
+        },
+      },
+      options: ["", "/prace", "/o-mnie", "/kontakt"],
+      description: "Вимкнений пункт (лише для історії; у коді disabled стоїть на пункті в items)",
+    },
     items: {
       control: "object",
-      description: "Пункти меню: label і href",
+      description: "Пункти меню: label, href, disabled, disabledReason",
     },
     label: {
       control: "text",
@@ -141,11 +168,12 @@ export function SiteNavigation() {
   args: {
     items,
     activeHref: "/prace",
+    disabledHref: "",
     label: "Menu główne",
     menuLabel: "Menu",
     closeLabel: "Zamknij",
   },
-} satisfies Meta<typeof Navigation>;
+} satisfies Meta<StoryArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

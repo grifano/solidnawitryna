@@ -34,6 +34,8 @@ _Картка однієї реалізації: обкладинка, назв�
 | \`imageAlt\` | опис картинки для скрінрідера | порожній рядок (картинка декоративна) |
 | \`href\` | адреса, куди веде картка (обов'язковий) | немає |
 | \`sizes\` | ширина картинки на екранах, для вибору розміру файлу | \`(min-width: 64rem) 33vw, 100vw\` |
+| \`disabled\` | вимкнена картка (кейс ще не готовий) | \`false\` |
+| \`disabledReason\` | пояснення, чому картка вимкнена; показується під описом | немає |
 | \`className\` | клас для зовнішнього посилання (ширина в сітці тощо) | немає |
 
 ## Варіанти й стани
@@ -43,13 +45,14 @@ _Картка однієї реалізації: обкладинка, назв�
 - Default: заливка \`surface\`, рамка \`line\` 1 px, назва \`text\`, опис \`text-muted\`.
 - Hover: рамка стає \`accent\`, назва теж \`accent\`. Колір змінюється плавно за 150 мс.
 - Focus (Tab на клавіатурі): контур 2 px кольору \`accent\` з відступом 3 px навколо всієї картки. Контраст контуру до фону сторінки не менше 3:1 (у Dark 6,32:1, у Light 6,36:1). Показується лише при навігації з клавіатури.
+- Disabled: робиться через \`aria-disabled\`, без адреси (\`role="link"\`, \`tabIndex=0\`). Картка лишається у фокусі й нікуди не веде. Hover-ефекту немає: рамка лишається \`line\`. Обкладинка сіра (\`grayscale\`), назва \`text-muted\`, курсор \`not-allowed\`. Під описом \`disabledReason\` (\`text-caption\`, \`text-muted\`), його читає скрінрідер через \`aria-describedby\`.
 - Анімація: якщо в системі ввімкнено «зменшити рух», перехід кольору вимкнено (\`motion-reduce:transition-none\`).
 - Обкладинка: завжди пропорції \`aspect-cover\` (4 / 3), картинка заповнює її без розтягування (\`object-cover\`). Будь-яке співвідношення сторін файлу обрізається до 4 / 3.
 
 ## Токени
 
 - Кольори: \`surface\`, \`line\`, \`accent\`, \`text\`, \`text-muted\`.
-- Текст: \`text-lead-strong\` (назва), \`text-body\` (опис).
+- Текст: \`text-lead-strong\` (назва), \`text-body\` (опис), \`text-caption\` (пояснення в disabled).
 - Радіус: \`rounded-card\`.
 - Пропорція: \`aspect-cover\`.
 - Відступи: \`p-6\` (всередині під обкладинкою), \`gap-2\` (між назвою й описом).
@@ -76,6 +79,15 @@ import { WorkCard } from "@/components/WorkCard";
   imageAlt="Logo SimplePrint i kolaż zdjęć produktów z nadrukiem"
   href="/prace/simpleprint"
 />
+
+<WorkCard
+  title="SimplePrint"
+  description="…"
+  image={cover}
+  href="/prace/simpleprint"
+  disabled
+  disabledReason="Studium przypadku w przygotowaniu"
+/>
 \`\`\`
 `,
       },
@@ -97,6 +109,14 @@ import { WorkCard } from "@/components/WorkCard";
       control: "text",
       description: "Ширина картинки на екранах, для вибору розміру файлу",
     },
+    disabled: {
+      control: "boolean",
+      description: "Вимкнена картка: нікуди не веде, лишається у фокусі",
+    },
+    disabledReason: {
+      control: "text",
+      description: "Пояснення, чому картка вимкнена (показується під описом)",
+    },
     className: { control: false },
   },
   args: {
@@ -106,6 +126,8 @@ import { WorkCard } from "@/components/WorkCard";
     image: cover,
     imageAlt: "Logo SimplePrint i kolaż zdjęć produktów z nadrukiem",
     href: "#",
+    disabled: false,
+    disabledReason: "Studium przypadku w przygotowaniu",
   },
 } satisfies Meta<typeof WorkCard>;
 
