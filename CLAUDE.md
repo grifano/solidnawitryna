@@ -77,6 +77,7 @@
 - **Navigation** (клієнтський): пропси `items`, `activeHref`, `label`, `menuLabel`, `closeLabel`. Активний пункт `aria-current="page"`. Пункт `items` може бути `disabled` (з `disabledReason`). Менше 1024 px згортається в кнопку-меню на весь екран; закривається кнопкою, Escape або вибором пункту.
 - **Logo:** `variant` `full` або `mark`; з `href` — посилання, без нього `role="img"`. Hover: знак припіднімається вправо (`rotate-6`). `disabled` (лише з `href`): без адреси (`aria-disabled`), у фокусі, hover немає.
 - **Chip:** коротка неінтерактивна позначка, рамка `line`, `text-caption`, `rounded-control`. Кілька — в `ul` > `li` з `flex flex-wrap gap-3`.
+- **TestimonialCard** (клієнтський): відгук клієнта. Пропси `quote`, `name`, `role`, `rating`, `translated` (позначка «(tłumaczenie)»), `original` і `originalLang` (кнопка «Pokaż oryginał» розгортає оригінал на картці), `siteHref`, `siteLabel` (живий сайт клієнта), `sourceHref`, `sourceLabel`, `sourceDisabled`, `sourceDisabledReason`, `revealDelay`. Сама картка не натискається; посилання відкриваються в новій вкладці. Поява при прокрутці (підйом і проявлення, зірки по одній), без анімації при `motion-reduce` і без JS.
 - **IconButton:** кругла кнопка зі значком; `label` обов'язковий (`aria-label`), `disabled` через `aria-disabled`, значок `size-6 fill-current`.
 - Спільне для інтерактивних: focus — контур 2 px `accent`, відступ 3 px; перехід 150 мс; без анімації при `motion-reduce`.
 
