@@ -115,7 +115,7 @@
 
   /* ---------- Лише для сторінок, не для компонентів ---------- */
   --container-page: 82rem; /* ширина контенту сторінки: 1312 px = 1440 − 2 × 64 (max-w-page) */
-  --container-prose: 36rem; /* найбільша ширина читабельного тексту: 576 px (max-w-prose) */
+  --container-reading: 36rem; /* найбільша ширина читабельного тексту: 576 px (max-w-reading). Не prose: вбудований клас Tailwind max-w-prose (65ch) перекриває токен з такою назвою */
   --spacing-section: 6rem; /* відстань між великими секціями: 96 px (py-section, gap-section) */
 
   /* ---------- Шрифт (DM Sans підключений у fonts.ts) ---------- */

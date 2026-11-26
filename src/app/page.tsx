@@ -115,7 +115,7 @@ export default function Home() {
             <h1 className="text-heading md:text-display">
               Strona, o którą nie trzeba się martwić
             </h1>
-            <p data-intro="reveal" className="max-w-prose text-lead text-text-muted">
+            <p data-intro="reveal" className="max-w-reading text-lead text-text-muted">
               Robię markę i stronę, a potem się nią opiekuję. SEO, aktualizacje,
               kopie zapasowe i bezpieczeństwo biorę na siebie.
             </p>
@@ -146,7 +146,7 @@ export default function Home() {
             <h2 id="opinie-title" className="text-heading">
               Co mówią ci, którzy już ze mną pracowali
             </h2>
-            <p className="max-w-prose text-lead text-text-muted">
+            <p className="max-w-reading text-lead text-text-muted">
               Opinie z platformy Upwork, przetłumaczone na polski. Oryginał każdej
               opinii można rozwinąć pod tłumaczeniem.
             </p>

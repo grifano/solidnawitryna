@@ -63,7 +63,7 @@
 - **Пропорції:** `aspect-portrait` (1 / 1), `aspect-cover` (4 / 3).
 - **Тіні:** лише `drop-shadow-scene` (вікно в ілюстрації першого екрана).
 - **Брейкпоінти:** база 375 px без префікса, `md:` 768, `lg:` 1024, `xl:` 1440. Стандартні `sm` і `2xl` скинуто.
-- **Токени лише для сторінок:** `max-w-page` (1312 px), `max-w-prose` (576 px), `py-section` / `gap-section` (96 px, на мобільному 64 px).
+- **Токени лише для сторінок:** `max-w-page` (1312 px), `max-w-reading` (576 px), `py-section` / `gap-section` (96 px, на мобільному 64 px).
 - **Токени лише для `HeroStage`:** `w-portrait-ring`, `w-portrait-photo`, `w-splash-mark`, `max-w-stage`.
 - Стандартні палітра, розміри тексту, радіуси й тіні Tailwind скинуто (`--color-*: initial` та інші).
 
@@ -71,13 +71,13 @@
 
 Лежать у `src/components`, поруч `<Компонент>.stories.tsx` (`title` латиницею, `Components/Button`).
 
-- **Button:** варіанти `primary` (заливка `accent`, hover `accent-hover`, текст `text-canvas`) і `secondary` (межа `text-muted`, hover `surface`); розміри `md`, `lg`. З `href` стає посиланням `next/link` (сторінка, якір, зовнішня адреса в новій вкладці); `disabled` з `href` не діє. Вимкнена: `disabled` у пропсах дає `aria-disabled`, пояснення в `disabledReason` (`aria-describedby`).
-- **FormField:** поле з підписом над ним (`label` обов'язковий), `error`, `disabled`. Межа `text-muted` 2 px. Стани: default, hover (межа `text`), focus, заповнене, помилка (`danger`, іконка, `aria-invalid`), disabled.
+- **Button:** варіанти `primary` (заливка `accent`, hover `accent-hover`, текст `text-canvas`) і `secondary` (межа `text-muted`, hover `surface`); розміри `md`, `lg`. З `href` стає посиланням `next/link` (сторінка, якір, зовнішня адреса в новій вкладці); з `href` і `disabled` адреса прибирається (`span role="link"`). Вимкнена: `disabled` у пропсах дає `aria-disabled`, пояснення в `disabledReason` (`aria-describedby`).
+- **FormField:** поле з підписом над ним (`label` обов'язковий), `error`, `disabled`. Межа `text-muted` 2 px. Стани: default, hover (заливка `surface` у будь-якому стані, звичайна межа ще й `text`), focus, заповнене, помилка (`danger`, іконка, `aria-invalid`), disabled.
 - **WorkCard:** вся картка — одне посилання. Пропси `title`, `description`, `image`, `imageAlt`, `href`, `sizes`, `disabled`, `disabledReason`. Обкладинка `aspect-cover`, `rounded-card`, рамка `line`. Hover: рамка й назва `accent`. Disabled: без адреси (`aria-disabled`), у фокусі, hover немає, обкладинка сіра.
 - **Navigation** (клієнтський): пропси `items`, `activeHref`, `label`, `menuLabel`, `closeLabel`. Активний пункт `aria-current="page"`. Пункт `items` може бути `disabled` (з `disabledReason`). Менше 1024 px згортається в кнопку-меню на весь екран; закривається кнопкою, Escape або вибором пункту.
 - **Logo:** `variant` `full` або `mark`; з `href` — посилання, без нього `role="img"`. Hover: знак припіднімається вправо (`rotate-6`). `disabled` (лише з `href`): без адреси (`aria-disabled`), у фокусі, hover немає.
 - **Chip:** коротка неінтерактивна позначка, рамка `line`, `text-caption`, `rounded-control`. Кілька — в `ul` > `li` з `flex flex-wrap gap-3`.
-- **TestimonialCard** (клієнтський): відгук клієнта. Пропси `quote`, `name`, `role`, `rating`, `translated` (позначка «(tłumaczenie)»), `original` і `originalLang` (кнопка «Pokaż oryginał» розгортає оригінал на картці), `siteHref`, `siteLabel` (живий сайт клієнта), `sourceHref`, `sourceLabel`, `sourceDisabled`, `sourceDisabledReason`, `revealDelay`. Сама картка не натискається; посилання відкриваються в новій вкладці. Поява при прокрутці (підйом і проявлення, зірки по одній), без анімації при `motion-reduce` і без JS.
+- **TestimonialCard** (клієнтський): відгук клієнта. Пропси `quote`, `name`, `role`, `rating`, `translated` (позначка «(tłumaczenie)»), `original` і `originalLang` (кнопка «Pokaż oryginał» розгортає оригінал на картці), `siteHref`, `siteLabel` (живий сайт клієнта), `sourceHref`, `sourceLabel`, `sourceDisabled`, `sourceDisabledReason`, `revealDelay`. Сама картка не натискається; посилання відкриваються в новій вкладці. Hover і focus посилань: лінія під текстом малюється зліва направо (як підкреслення шапки в мобільному меню), значок зсувається на 2 px. Поява при прокрутці (підйом і проявлення, зірки по одній), без анімації при `motion-reduce` і без JS.
 - **IconButton:** кругла кнопка зі значком; `label` обов'язковий (`aria-label`), `disabled` через `aria-disabled`, значок `size-6 fill-current`.
 - Спільне для інтерактивних: focus — контур 2 px `accent`, відступ 3 px; перехід 150 мс; без анімації при `motion-reduce`.
 
@@ -85,7 +85,7 @@
 
 - Кольори, розміри тексту, радіуси й пропорції тільки з токенів `@theme`.
 - Класи, яких немає в `@theme` (`text-white`, `bg-black`, `text-gray-500`, `rounded-lg`, `shadow-md`), не використовувати.
-- Відступи в компонентах тільки з кроків 8, 12, 16, 24, 32 px (`2`, `3`, `4`, `6`, `8`). Токени розкладки (`max-w-page`, `max-w-prose`, `py-section`) тільки на сторінках.
+- Відступи в компонентах тільки з кроків 8, 12, 16, 24, 32 px (`2`, `3`, `4`, `6`, `8`). Токени розкладки (`max-w-page`, `max-w-reading`, `py-section`) тільки на сторінках.
 - Довільні значення в квадратних дужках (`p-[13px]`, `h-[150px]`, `text-[#123456]`, `text-[17px]`) заборонені.
 - Нові кольори не додавати.
 - Використовуй готові компоненти замість нових.

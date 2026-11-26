@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 
 export interface TestimonialCardProps {
   /** Текст відгуку. Лапки компонент додає сам. */
@@ -57,6 +57,33 @@ const linkBase =
   "inline-flex items-center gap-2 self-start rounded-control text-caption-strong " +
   "outline-accent focus-visible:outline-2 focus-visible:outline-offset-3 " +
   "transition-colors duration-150 ease-out motion-reduce:transition-none";
+
+/* Активне посилання чи кнопка: іменована група, щоб лінія й значок реагували на hover і фокус. */
+const linkActive = `${linkBase} group/link cursor-pointer text-accent`;
+
+/* Значок усередині активного посилання: плавно зсувається на hover і у фокусі (лише без «зменшити рух»). */
+const iconMotion = "transition-transform duration-150 ease-out motion-reduce:transition-none";
+
+/**
+ * Текст посилання з лінією під ним. На hover і у фокусі лінія малюється зліва направо,
+ * а коли курсор іде, стягується справа наліво: так само, як підкреслення шапки
+ * при відкритті й закритті мобільного меню (Navigation).
+ */
+function DrawnLabel({ children }: { children: ReactNode }) {
+  return (
+    <span className="relative">
+      {children}
+      <span
+        aria-hidden="true"
+        className={
+          "absolute inset-x-0 top-full h-px origin-left scale-x-0 bg-current " +
+          "transition-transform duration-300 ease-in-out motion-reduce:transition-none " +
+          "group-hover/link:scale-x-100 group-focus-visible/link:scale-x-100"
+        }
+      />
+    </span>
+  );
+}
 
 /**
  * Картка відгуку клієнта: оцінка зірками, текст, кнопка з оригіналом, автор і посилання
@@ -146,8 +173,19 @@ export function TestimonialCard({
 
   const showReason = sourceDisabled && Boolean(sourceDisabledReason);
 
-  const arrow = (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 fill-current">
+  // moves: у активному посиланні стрілка «тягне» в нову вкладку, зсуваючись угору й управо.
+  const arrow = (moves: boolean) => (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className={[
+        "size-4 fill-current",
+        moves
+          ? `${iconMotion} motion-safe:group-hover/link:translate-x-0.5 motion-safe:group-hover/link:-translate-y-0.5 ` +
+            "motion-safe:group-focus-visible/link:translate-x-0.5 motion-safe:group-focus-visible/link:-translate-y-0.5"
+          : "",
+      ].join(" ")}
+    >
       <path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3ZM5 5h6v2H5v12h12v-6h2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" />
     </svg>
   );
@@ -191,17 +229,20 @@ export function TestimonialCard({
               aria-expanded={showOriginal}
               aria-controls={originalId}
               onClick={() => setShowOriginal((v) => !v)}
-              className={`${linkBase} cursor-pointer text-accent underline-offset-4 hover:underline`}
+              className={linkActive}
             >
-              {showOriginal ? "Ukryj oryginał" : "Pokaż oryginał"}
+              <DrawnLabel>{showOriginal ? "Ukryj oryginał" : "Pokaż oryginał"}</DrawnLabel>
+              {/* Шеврон на hover зсувається туди, куди піде текст: униз — розгорнути, угору — згорнути. */}
               <svg
                 viewBox="0 0 24 24"
                 aria-hidden="true"
-                className={
-                  "size-4 fill-current transition-transform duration-150 ease-out " +
-                  "motion-reduce:transition-none " +
-                  (showOriginal ? "rotate-180" : "")
-                }
+                className={[
+                  "size-4 fill-current",
+                  iconMotion,
+                  showOriginal
+                    ? "rotate-180 motion-safe:group-hover/link:-translate-y-0.5 motion-safe:group-focus-visible/link:-translate-y-0.5"
+                    : "motion-safe:group-hover/link:translate-y-0.5 motion-safe:group-focus-visible/link:translate-y-0.5",
+                ].join(" ")}
               >
                 <path d="M12 15.5 5.5 9l1.41-1.41L12 12.67l5.09-5.08L18.5 9 12 15.5Z" />
               </svg>
@@ -238,11 +279,11 @@ export function TestimonialCard({
               href={siteHref}
               target="_blank"
               rel="noopener noreferrer"
-              className={`${linkBase} text-accent underline-offset-4 hover:underline`}
+              className={linkActive}
             >
-              {siteLabel}
+              <DrawnLabel>{siteLabel}</DrawnLabel>
               <span className="sr-only">(otwiera się w nowej karcie)</span>
-              {arrow}
+              {arrow(true)}
             </a>
           )}
           {sourceDisabled ? (
@@ -255,7 +296,7 @@ export function TestimonialCard({
                 className={`${linkBase} cursor-not-allowed text-text-muted`}
               >
                 {sourceLabel}
-                {arrow}
+                {arrow(false)}
               </span>
               {showReason && (
                 <span id={reasonId} className="text-caption text-text-muted">
@@ -269,11 +310,11 @@ export function TestimonialCard({
                 href={sourceHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${linkBase} text-accent underline-offset-4 hover:underline`}
+                className={linkActive}
               >
-                {sourceLabel}
+                <DrawnLabel>{sourceLabel}</DrawnLabel>
                 <span className="sr-only">(otwiera się w nowej karcie)</span>
-                {arrow}
+                {arrow(true)}
               </a>
             )
           )}

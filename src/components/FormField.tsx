@@ -19,10 +19,11 @@ export interface FormFieldProps
 const inputBase =
   "w-full rounded-control border-2 bg-transparent px-6 py-3 font-sans text-body text-text " +
   "placeholder:text-text-muted outline-accent focus-visible:outline-2 focus-visible:outline-offset-3 " +
-  "transition duration-150 ease-out motion-reduce:transition-none " +
+  "transition duration-150 ease-out motion-reduce:transition-none enabled:hover:bg-surface " +
   "disabled:cursor-not-allowed disabled:border-line disabled:bg-surface disabled:text-text-muted";
 
 const inputDefault = "border-text-muted enabled:hover:border-text";
+// Hover у будь-якому стані дає легку заливку surface (у inputBase). Межа з помилкою лишається danger.
 const inputError = "border-danger";
 
 /**

@@ -1,5 +1,10 @@
 import Link from "next/link";
-import { useId, type ComponentPropsWithoutRef, type MouseEvent } from "react";
+import {
+  useId,
+  type ComponentPropsWithoutRef,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 
 export type ButtonVariant = "primary" | "secondary";
 export type ButtonSize = "md" | "lg";
@@ -21,8 +26,16 @@ export interface ButtonLinkProps
    * якщо не передати свої `target` і `rel`.
    */
   href: string;
-  disabled?: never;
-  disabledReason?: never;
+  /**
+   * Вимкнена кнопка-посилання. Адреса прибирається: рендериться `<span role="link">` з
+   * `aria-disabled`, як у вимкнених WorkCard і Logo. Лишається у фокусі, але нікуди не веде.
+   */
+  disabled?: boolean;
+  /**
+   * Пояснення під вимкненою кнопкою: чому вона недоступна й що зробити.
+   * Зв'язується з кнопкою через `aria-describedby`. Показується тільки при `disabled`.
+   */
+  disabledReason?: string;
 }
 
 export interface ButtonActionProps
@@ -74,15 +87,67 @@ export function Button(props: ButtonProps) {
   return <ButtonAction {...props} />;
 }
 
+/** Кнопка й пояснення під нею, зв'язане через `aria-describedby`. */
+function WithReason({
+  control,
+  reasonId,
+  reason,
+}: {
+  control: ReactNode;
+  reasonId: string;
+  reason: string;
+}) {
+  return (
+    <div className="flex flex-col items-start gap-2">
+      {control}
+      <p id={reasonId} className="text-caption text-text-muted">
+        {reason}
+      </p>
+    </div>
+  );
+}
+
 function ButtonLink({
   variant = "primary",
   size = "md",
   href,
   target,
   rel,
+  disabled = false,
+  disabledReason,
   className,
+  children,
+  "aria-describedby": describedBy,
   ...rest
 }: ButtonLinkProps) {
+  const reasonId = useId();
+  const classes = [base, variants[variant], sizes[size], disabledStyles, className]
+    .filter(Boolean)
+    .join(" ");
+
+  if (disabled) {
+    // Без href: посилання, що нікуди не веде. Лишається у фокусі (tabIndex), як вимкнена кнопка.
+    const showReason = Boolean(disabledReason);
+    const describedByIds =
+      [describedBy, showReason ? reasonId : undefined].filter(Boolean).join(" ") ||
+      undefined;
+    const link = (
+      <span
+        id={rest.id}
+        role="link"
+        tabIndex={0}
+        aria-disabled="true"
+        aria-label={rest["aria-label"]}
+        aria-describedby={describedByIds}
+        className={classes}
+      >
+        {children}
+      </span>
+    );
+    if (!showReason) return link;
+    return <WithReason control={link} reasonId={reasonId} reason={disabledReason!} />;
+  }
+
   const external = /^https?:\/\//.test(href);
   return (
     <Link
@@ -90,10 +155,11 @@ function ButtonLink({
       href={href}
       target={target ?? (external ? "_blank" : undefined)}
       rel={rel ?? (external ? "noopener noreferrer" : undefined)}
-      className={[base, variants[variant], sizes[size], className]
-        .filter(Boolean)
-        .join(" ")}
-    />
+      aria-describedby={describedBy}
+      className={classes}
+    >
+      {children}
+    </Link>
   );
 }
 
@@ -140,13 +206,5 @@ function ButtonAction({
   );
 
   if (!showReason) return button;
-
-  return (
-    <div className="flex flex-col items-start gap-2">
-      {button}
-      <p id={reasonId} className="text-caption text-text-muted">
-        {disabledReason}
-      </p>
-    </div>
-  );
+  return <WithReason control={button} reasonId={reasonId} reason={disabledReason!} />;
 }

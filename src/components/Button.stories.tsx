@@ -39,7 +39,7 @@ _Кнопка для дії на сторінці: надіслати форму
 - Hover: у \`primary\` заливка стає трохи темнішою (\`accent-hover\`, контраст тексту \`canvas\` не менше 4,5:1), у \`secondary\` з'являється заливка \`surface\`.
 - Focus (Tab на клавіатурі): контур 2 px кольору \`accent\` з відступом 3 px, контраст до фону не менше 3:1. Показується лише при навігації з клавіатури.
 - Перехід: колір заливки, межі й тексту змінюється плавно за 150 мс (\`transition duration-150 ease-out\`). При натисканні кнопка трохи стискається до 97% (\`active:scale-97\`). Вимкнена кнопка не стискається. Якщо в системі ввімкнено «зменшити рух», анімація вимкнена (\`motion-reduce:transition-none\`).
-- Disabled: заливка \`surface\`, текст \`text-muted\`, межа \`line\`, курсор «заборонено». Кнопка лишається у фокусі (\`aria-disabled\`, а не атрибут \`disabled\`), клік і Enter нічого не роблять. Hover не змінює вигляд.
+- Disabled: заливка \`surface\`, текст \`text-muted\`, межа \`line\`, курсор «заборонено». Кнопка лишається у фокусі (\`aria-disabled\`, а не атрибут \`disabled\`), клік і Enter нічого не роблять. Hover не змінює вигляд. Так само працює кнопка з \`href\`: у вимкненому стані адреса прибирається, замість \`<a>\` рендериться \`<span role="link">\` з \`aria-disabled\` (як у вимкнених WorkCard і Logo), тож посилання нікуди не веде.
 - Пояснення: якщо передати \`disabledReason\`, під вимкненою кнопкою з'явиться текст, зв'язаний з нею через \`aria-describedby\`. Скрінрідер читає його разом з назвою кнопки. Пояснення пиши конкретно: чому кнопка недоступна і що зробити.
 
 ## Токени
@@ -56,7 +56,7 @@ _Кнопка для дії на сторінці: надіслати форму
 - Другорядна кнопка: для додаткової дії поруч з основною або коли дія не головна.
 - Вимкнену кнопку лишай, коли дію тимчасово не можна виконати й користувачу треба пояснити чому. Завжди додавай \`disabledReason\`.
 - Не став дві основні кнопки поруч.
-- Дія на сторінці (надіслати, відкрити) — кнопка без \`href\`. Перехід на сторінку, якір чи Calendly — кнопка з \`href\`: це справжнє посилання \`<a>\`, тому працюють відкриття в новій вкладці, копіювання адреси й Enter. Зовнішня адреса (\`https://…\`) відкривається в новій вкладці з \`rel="noopener noreferrer"\`. Вимкнути посилання не можна (\`disabled\` не діє з \`href\`).
+- Дія на сторінці (надіслати, відкрити) — кнопка без \`href\`. Перехід на сторінку, якір чи Calendly — кнопка з \`href\`: це справжнє посилання \`<a>\`, тому працюють відкриття в новій вкладці, копіювання адреси й Enter. Зовнішня адреса (\`https://…\`) відкривається в новій вкладці з \`rel="noopener noreferrer"\`. Якщо перехід тимчасово недоступний (наприклад, Calendly ще не підключений), постав \`disabled\` і \`disabledReason\`: кнопка лишиться на місці, але нікуди не поведе.
 
 ## Як брати в код
 
@@ -69,6 +69,9 @@ import { Button } from "@/components/Button";
 <Button variant="secondary" href="https://calendly.com/…">Umów konsultację</Button>
 <Button disabled disabledReason="Uzupełnij formularz, aby wysłać wiadomość.">
   Wyślij
+</Button>
+<Button href="https://calendly.com/…" disabled disabledReason="Kalendarz będzie dostępny wkrótce.">
+  Umów konsultację
 </Button>
 \`\`\`
 `,
@@ -115,11 +118,24 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
 
-/** Кнопка-посилання: з `href` це `<a>` з тим самим виглядом. Адресу задай в `href` у коді. */
+/**
+ * Кнопка-посилання: з `href` це `<a>` з тим самим виглядом. Адресу задай в `href` у коді.
+ * Перемикач `disabled` прибирає адресу: посилання лишається у фокусі, але нікуди не веде.
+ */
 export const AsLink: Story = {
-  args: { children: "Umów bezpłatną konsultację", variant: "secondary" },
-  render: ({ variant, size, children }) => (
-    <Button variant={variant} size={size} href="#consultation">
+  args: {
+    children: "Umów bezpłatną konsultację",
+    variant: "secondary",
+    disabledReason: "Kalendarz konsultacji będzie dostępny wkrótce.",
+  },
+  render: ({ variant, size, children, disabled, disabledReason }) => (
+    <Button
+      variant={variant}
+      size={size}
+      href="#consultation"
+      disabled={disabled}
+      disabledReason={disabledReason}
+    >
       {children}
     </Button>
   ),
